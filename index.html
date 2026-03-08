@@ -534,12 +534,12 @@ body {
 .bottom-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 90px;
-  background: #111111;
-  border-top: 0.5px solid #2c2c2e;
+  height: 78px;
+  background: #161616;
+  border-top: 0.5px solid #2a2a2a;
   display: flex;
   align-items: flex-start;
-  padding-top: 10px;
+  padding-top: 12px;
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 100;
 }
@@ -549,14 +549,28 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 8px 0;
-  border-radius: 8px;
-  transition: opacity 0.13s;
+  transition: opacity 0.15s;
 }
-.nav-it:hover { opacity: 0.7; }
+.nav-it:active { opacity: 0.4; }
+.nav-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+.nav-indicator {
+  width: 28px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: transparent;
+}
+.nav-it.active .nav-indicator {
+  background: #7c5cfc;
+}
 .nav-it svg {
   width: 28px; height: 28px;
-  stroke: #48484a;
+  stroke: #4a4a4e;
   fill: none;
   stroke-width: 1.6;
   stroke-linecap: round;
@@ -564,6 +578,52 @@ body {
 }
 .nav-it.active svg { stroke: #7c5cfc; }
 .nav-it.active .ico-home { fill: #7c5cfc; stroke: none; }
+
+/* ── MANAGE TOKEN LIST BUTTON ── */
+.manage-tokens-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 0 28px;
+  cursor: pointer;
+  color: #8e8e93;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  transition: opacity 0.15s;
+}
+.manage-tokens-btn:active { opacity: 0.5; }
+
+/* ── TOGGLE SWITCH ── */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #3a3a3c;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  width: 22px; height: 22px;
+  left: 2px; top: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle-switch input:checked + .toggle-slider { background: #30d158; }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
 
 /* ── MODAL ── */
 .modal-bg {
@@ -726,7 +786,7 @@ body {
           </div>
           <!-- Search -->
           <div class="hdr-btn" onclick="toast('Search')">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="11" cy="11" r="7.5"/><line x1="20" y1="20" x2="16.1" y2="16.1"/></svg>
           </div>
         </div>
       </div>
@@ -750,7 +810,7 @@ body {
         </button>
         <button class="act-btn" onclick="toast('Swap')">
           <div class="act-ico">
-            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M1 12a11 11 0 0 1 11-11"/><polyline points="8 5 13 1 8 -3" transform="translate(4 11)"/><path d="M23 12a11 11 0 0 1-11 11"/><polyline points="16 19 11 23 16 27" transform="translate(0 -11)"/></svg>
           </div>
           <span class="act-lbl">Swap</span>
         </button>
@@ -803,29 +863,71 @@ body {
         <!-- rendered by JS -->
       </div>
 
+      <!-- MANAGE TOKEN LIST -->
+      <div class="manage-tokens-btn" onclick="openManageTokens()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+          <circle cx="9" cy="6" r="2.5" fill="#161616" stroke="#8e8e93"/>
+          <circle cx="15" cy="12" r="2.5" fill="#161616" stroke="#8e8e93"/>
+          <circle cx="9" cy="18" r="2.5" fill="#161616" stroke="#8e8e93"/>
+        </svg>
+        <span>Manage token list</span>
+      </div>
+
     </div><!-- /scroll-area -->
 
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">
-      <!-- Home -->
+      <!-- Home: filled house with active indicator -->
       <div class="nav-it active" onclick="">
-        <svg viewBox="0 0 24 24"><path class="ico-home" d="M3 12L12 3l9 9v9a1 1 0 01-1 1h-5v-5H9v5H4a1 1 0 01-1-1v-9z"/></svg>
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path class="ico-home" d="M5 12.5L12 5l7 7.5V20a1 1 0 01-1 1H9.5v-4H7.5v4H6a1 1 0 01-1-1v-7.5z"/>
+          </svg>
+          <div class="nav-indicator"></div>
+        </div>
       </div>
-      <!-- Wallet -->
-      <div class="nav-it" onclick="toast('Portfolio')">
-        <svg viewBox="0 0 24 24"><rect x="1" y="6" width="22" height="14" rx="3"/><path d="M16 10h2"/><path d="M1 10h22"/></svg>
+      <!-- NFTs: 2x2 grid squares -->
+      <div class="nav-it" onclick="toast('NFTs')">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/>
+            <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/>
+            <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/>
+            <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>
+          </svg>
+        </div>
       </div>
-      <!-- Swap -->
+      <!-- Swap: two arrows -->
       <div class="nav-it" onclick="toast('Swap')">
-        <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 4 21 8 17 12"/>
+            <path d="M3 8h18"/>
+            <polyline points="7 20 3 16 7 12"/>
+            <path d="M21 16H3"/>
+          </svg>
+        </div>
       </div>
-      <!-- Chat -->
-      <div class="nav-it" onclick="toast('Messages')">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <!-- History: clock -->
+      <div class="nav-it" onclick="toast('History')">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15.5 14.5"/>
+          </svg>
+        </div>
       </div>
-      <!-- Search -->
-      <div class="nav-it" onclick="openSearch()">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <!-- Discover: compass -->
+      <div class="nav-it" onclick="toast('Discover')">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -1050,8 +1152,8 @@ function solanaChain() { return chainLogo('sol'); }
 
 // ──────────── RENDER TOKENS ────────────
 function renderToks() {
-  document.getElementById('tok-list').innerHTML = S.tokens.map((t,i) => `
-    <div class="token-row" onclick="openTokModal(${i})">
+  document.getElementById('tok-list').innerHTML = S.tokens.map((t,i) => ({...t, _i:i})).filter(t => !t.hidden).map((t,i) => `
+    <div class="token-row" onclick="openTokModal(${t._i})">
       <div class="logo-stack">
         <div class="tok-logo">${t.logo}</div>
         ${t.noChain ? '' : `<div class="chain-badge">${t.chain}</div>`}
@@ -1242,6 +1344,34 @@ setInterval(tick, 10000);
 
 // ──────────── INIT ────────────
 renderToks();
+
+  // ── MANAGE TOKENS ──
+  function openManageTokens() {
+    const list = document.getElementById('manage-list');
+    list.innerHTML = S.tokens.map((t, i) => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:0.5px solid #2c2c2e;">
+        <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;">
+          ${t.logo}
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:600;color:#fff;">${t.name}</div>
+          <div style="font-size:12px;color:#8e8e93;">${t.sub}</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" ${t.hidden ? '' : 'checked'} onchange="toggleToken(${i}, this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    `).join('');
+    document.getElementById('m-manage').classList.add('show');
+  }
+  function closeManage() {
+    document.getElementById('m-manage').classList.remove('show');
+  }
+  function toggleToken(i, visible) {
+    S.tokens[i].hidden = !visible;
+    renderToks();
+  }
 
   // ── PULL TO REFRESH ──
   (function() {
