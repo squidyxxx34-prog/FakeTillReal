@@ -163,91 +163,83 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 30px 0;
-  height: 58px;
+  padding: 16px 26px 0;
+  height: 54px;
   flex-shrink: 0;
   position: relative;
   z-index: 10;
 }
 .status-time {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   color: #fff;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
   font-variant-numeric: tabular-nums;
 }
 .status-icons {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 /* Signal bars */
 .signal-group {
   display: flex;
   align-items: flex-end;
-  gap: 2.5px;
-  height: 12px;
+  gap: 2px;
+  height: 11px;
 }
 .signal-group span {
   background: #fff;
-  border-radius: 1.5px;
-  width: 3.5px;
+  border-radius: 1px;
+  width: 3px;
   display: block;
 }
-.signal-group span:nth-child(1) { height: 3px; opacity: 0.35; }
-.signal-group span:nth-child(2) { height: 6px; opacity: 0.55; }
-.signal-group span:nth-child(3) { height: 9px; opacity: 0.8; }
-.signal-group span:nth-child(4) { height: 12px; opacity: 1; }
+.signal-group span:nth-child(1) { height: 3px; opacity: 0.3; }
+.signal-group span:nth-child(2) { height: 5px; opacity: 0.5; }
+.signal-group span:nth-child(3) { height: 8px; opacity: 0.8; }
+.signal-group span:nth-child(4) { height: 11px; opacity: 1; }
 
-.lte-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0;
+/* WiFi icon */
+.wifi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.wifi-icon svg {
+  width: 16px;
+  height: 12px;
+}
+
 /* Battery */
 .batt {
   display: flex;
   align-items: center;
-  gap: 0;
 }
 .batt-body {
-  width: 27px;
-  height: 13px;
-  border-radius: 3.5px;
-  border: 1.5px solid rgba(255,255,255,0.35);
-  padding: 2px;
+  width: 25px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  padding: 1.5px;
   position: relative;
   background: transparent;
   overflow: visible;
 }
 .batt-fill {
   height: 100%;
-  width: 72%;
-  background: #ffd60a;
-  border-radius: 1.5px;
+  width: 50%;
+  background: #fff;
+  border-radius: 1px;
 }
 .batt-nub {
   position: absolute;
-  right: -4.5px;
+  right: -4px;
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
-  height: 6px;
-  background: rgba(255,255,255,0.35);
-  border-radius: 0 1.5px 1.5px 0;
-}
-.batt-bolt {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8px;
-  line-height: 1;
-  color: #000;
-  font-weight: 900;
-  z-index: 2;
+  width: 2.5px;
+  height: 5px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 0 1px 1px 0;
 }
 
 /* SCROLLABLE */
@@ -262,7 +254,7 @@ body {
 
 /* ── HEADER ── */
 .wallet-header {
-  padding: 10px 20px 6px;
+  padding: 6px 20px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -270,55 +262,55 @@ body {
 .wallet-ident {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   cursor: pointer;
 }
 .avatar-ring {
-  width: 46px; height: 46px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   background: linear-gradient(135deg, #2ecc71 0%, #27ae60 50%, #1e8449 100%);
   display: flex; align-items: center; justify-content: center;
-  font-size: 23px;
+  font-size: 22px;
   line-height: 1;
   user-select: none;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(46,204,113,0.3);
+  box-shadow: 0 2px 8px rgba(46,204,113,0.25);
 }
-.wallet-names { display: flex; flex-direction: column; gap: 1px; }
+.wallet-names { display: flex; flex-direction: column; gap: 0px; }
 .wallet-handle {
   font-size: 12px;
-  color: #636366;
+  color: #8e8e93;
   font-weight: 400;
   letter-spacing: 0px;
 }
 .wallet-name {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: -0.5px;
-  line-height: 1.15;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
 }
-.header-actions { display: flex; gap: 18px; align-items: center; }
+.header-actions { display: flex; gap: 16px; align-items: center; }
 .hdr-btn {
-  width: 34px; height: 34px;
+  width: 36px; height: 36px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   border-radius: 50%;
   transition: background 0.15s;
 }
 .hdr-btn:hover { background: rgba(255,255,255,0.06); }
-.hdr-btn svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hdr-btn svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ── BALANCE ── */
 .balance-block {
-  padding: 10px 20px 6px;
+  padding: 4px 20px 8px;
 }
 .balance-num {
-  font-size: 48px;
+  font-size: 46px;
   font-weight: 600;
   color: #fff;
-  letter-spacing: -2px;
-  line-height: 1;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
   cursor: pointer;
   display: inline-block;
   transition: opacity 0.15s;
@@ -327,14 +319,14 @@ body {
 .balance-change {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 5px;
+  gap: 7px;
+  margin-top: 3px;
 }
 .chg-val {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   color: #ff453a;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.1px;
 }
 .chg-val.up { color: #30d158; }
 .chg-pill {
@@ -342,7 +334,7 @@ body {
   color: #fff;
   font-size: 12px;
   font-weight: 700;
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: 99px;
   letter-spacing: 0px;
 }
@@ -352,18 +344,18 @@ body {
 .action-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
-  padding: 18px 14px 14px;
+  gap: 10px;
+  padding: 14px 16px 12px;
 }
 .act-btn {
   background: #1c1c1e;
-  border-radius: 14px;
+  border-radius: 16px;
   border: none;
-  padding: 15px 6px 11px;
+  padding: 16px 4px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   cursor: pointer;
   transition: background 0.13s, transform 0.1s;
   font-family: inherit;
@@ -371,19 +363,19 @@ body {
 .act-btn:hover { background: #252528; }
 .act-btn:active { background: #2c2c2f; transform: scale(0.95); }
 .act-ico {
-  width: 26px; height: 26px;
+  width: 24px; height: 24px;
   display: flex; align-items: center; justify-content: center;
 }
 .act-ico svg {
-  width: 26px; height: 26px;
+  width: 24px; height: 24px;
   stroke: #9b8fff;
   fill: none;
-  stroke-width: 1.9;
+  stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .act-lbl {
-  font-size: 13px;
+  font-size: 12px;
   color: #ebebf5;
   font-weight: 400;
   letter-spacing: 0px;
@@ -391,10 +383,10 @@ body {
 
 /* ── CASH CARD ── */
 .cash-card {
-  margin: 2px 14px 14px;
+  margin: 0px 16px 12px;
   background: #1c1c1e;
-  border-radius: 18px;
-  padding: 14px 16px;
+  border-radius: 16px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -402,24 +394,24 @@ body {
 }
 .cash-info {}
 .cash-label {
-  font-size: 13px;
-  color: #636366;
+  font-size: 12.5px;
+  color: #8e8e93;
   font-weight: 400;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   letter-spacing: 0px;
 }
 .cash-val {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
 }
 .cash-add-btn {
   background: #c4b5fd;
-  color: #1e0a4a;
+  color: #2d0a6e;
   border: none;
   border-radius: 99px;
-  padding: 10px 18px;
+  padding: 9px 16px;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -434,39 +426,38 @@ body {
 
 /* ── TOKENS SECTION ── */
 .tokens-head {
-  padding: 4px 20px 10px;
+  padding: 2px 20px 8px;
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   cursor: pointer;
 }
 .tokens-head-lbl {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
 }
 .tokens-head-chev {
-  font-size: 20px;
-  font-weight: 400;
-  color: #fff;
-  margin-top: 1px;
-  margin-left: 1px;
-  opacity: 0.9;
+  font-size: 18px;
+  font-weight: 500;
+  color: #8e8e93;
+  margin-top: 0px;
+  margin-left: 2px;
 }
 
 /* Token cards */
 .tokens-list {
-  padding: 0 14px;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   padding-bottom: 100px;
 }
 .token-row {
   background: #1c1c1e;
-  border-radius: 18px;
-  padding: 12px 14px;
+  border-radius: 16px;
+  padding: 11px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -507,35 +498,34 @@ body {
 .chain-badge svg { width: 100%; height: 100%; }
 
 .tok-info { flex: 1; min-width: 0; }
-.tok-name-row { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+.tok-name-row { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
 .tok-name {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.1px;
 }
 .tok-verify {
-  width: 16px; height: 16px;
+  width: 15px; height: 15px;
   border-radius: 50%;
   background: none;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  margin-top: 0px;
 }
 .tok-sub {
   font-size: 13px;
-  color: #636366;
+  color: #8e8e93;
   letter-spacing: 0px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .tok-right { text-align: right; flex-shrink: 0; }
 .tok-usd {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.1px;
   margin-bottom: 2px;
 }
 .tok-chg {
@@ -545,18 +535,18 @@ body {
   font-weight: 400;
 }
 .tok-chg.up   { color: #30d158; }
-.tok-chg.flat { color: #636366; }
+.tok-chg.flat { color: #8e8e93; }
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 86px;
+  height: 82px;
   background: #111111;
   border-top: 0.5px solid #2c2c2e;
   display: flex;
   align-items: flex-start;
-  padding-top: 10px;
+  padding-top: 8px;
   z-index: 100;
 }
 .nav-it {
@@ -565,16 +555,16 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 6px 0;
+  padding: 8px 0;
   border-radius: 8px;
   transition: opacity 0.13s;
 }
 .nav-it:hover { opacity: 0.7; }
 .nav-it svg {
-  width: 26px; height: 26px;
+  width: 24px; height: 24px;
   stroke: #48484a;
   fill: none;
-  stroke-width: 1.7;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -716,11 +706,16 @@ body {
         <div class="signal-group">
           <span></span><span></span><span></span><span></span>
         </div>
-        <span class="lte-label">4G</span>
+        <div class="wifi-icon">
+          <svg viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 14.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" fill="white"/>
+            <path d="M7.5 10.5C8.9 9.1 10.35 8.4 12 8.4s3.1.7 4.5 2.1" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <path d="M4 7C6.2 4.8 8.95 3.6 12 3.6s5.8 1.2 8 3.4" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.6"/>
+          </svg>
+        </div>
         <div class="batt">
           <div class="batt-body">
             <div class="batt-fill"></div>
-            <div class="batt-bolt">⚡</div>
             <div class="batt-nub"></div>
           </div>
         </div>
