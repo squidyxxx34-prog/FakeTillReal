@@ -22,7 +22,7 @@
     const manifest = {
       name: "FakeTillReal",
       short_name: "FakeTillReal",
-      description: "Phantom Wallet — FakeTillReal",
+      description: "FakeTillReal — Fake Crypto Wallet",
       start_url: "./",
       display: "fullscreen",
       orientation: "portrait",
@@ -74,91 +74,40 @@
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 body {
-  background: #0a0a0a;
+  background: #111111;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  overflow: hidden;
 }
 
 /* ── PHONE SHELL ── */
 .phone-shell {
   position: relative;
-  width: 393px;
-  height: 852px;
-  flex-shrink: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
 }
 
-/* Outer bezel */
-.phone-bezel {
-  position: absolute;
-  inset: 0;
-  border-radius: 55px;
-  background: linear-gradient(160deg, #2a2a2a 0%, #1a1a1a 40%, #0f0f0f 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.08),
-    0 0 0 1px #000,
-    0 60px 140px rgba(0,0,0,0.95),
-    0 20px 60px rgba(0,0,0,0.8);
-}
 
-/* Side buttons */
-.btn-vol-up   { position:absolute; left:-3px; top:160px; width:3px; height:38px; background:#1f1f1f; border-radius:2px 0 0 2px; }
-.btn-vol-down { position:absolute; left:-3px; top:210px; width:3px; height:38px; background:#1f1f1f; border-radius:2px 0 0 2px; }
-.btn-power    { position:absolute; right:-3px; top:185px; width:3px; height:68px; background:#1f1f1f; border-radius:0 2px 2px 0; }
 
 /* Screen area */
 .phone-screen {
   position: absolute;
-  top: 6px; left: 6px; right: 6px; bottom: 6px;
-  border-radius: 50px;
+  inset: 0;
+  border-radius: 0;
   background: #111111;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* Screen glare */
-.phone-screen::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-  border-radius: 50px 50px 0 0;
-  pointer-events: none;
-  z-index: 999;
-}
 
-/* Dynamic island */
-.dynamic-island {
-  position: absolute;
-  top: 13px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 126px;
-  height: 37px;
-  background: #111111;
-  border-radius: 22px;
-  z-index: 200;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
-}
-/* camera dot inside island */
-.dynamic-island::after {
-  content: '';
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle at 35% 35%, #1a3a1a, #0a1a0a);
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.06), inset 0 0 4px rgba(0,200,80,0.15);
-}
+
+
 
 /* STATUS BAR */
+.status-bar { display: none !important; }
+.dynamic-island { display: none !important; }
 .status-bar {
   display: flex;
   justify-content: space-between;
@@ -249,8 +198,52 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   background: #111111;
+  position: relative;
 }
 .scroll-area::-webkit-scrollbar { display: none; }
+
+/* ── PULL TO REFRESH ── */
+.ptr-indicator {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  z-index: 50;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.ptr-indicator.visible { opacity: 1; }
+.ptr-spinner {
+  width: 28px; height: 28px;
+  border: 2.5px solid rgba(124,92,252,0.25);
+  border-top-color: #7c5cfc;
+  border-radius: 50%;
+}
+.ptr-spinner.spinning {
+  animation: ptr-spin 0.7s linear infinite;
+}
+@keyframes ptr-spin { to { transform: rotate(360deg); } }
+
+/* value flash animation on refresh */
+@keyframes val-flash {
+  0%   { opacity: 1; }
+  25%  { opacity: 0.15; }
+  55%  { opacity: 1; }
+  75%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+.refreshing .balance-num,
+.refreshing .chg-val,
+.refreshing .chg-pill,
+.refreshing .tok-usd,
+.refreshing .tok-chg,
+.refreshing .tok-sub,
+.refreshing .cash-val {
+  animation: val-flash 1.1s ease forwards;
+}
 
 /* ── HEADER ── */
 .wallet-header {
@@ -541,12 +534,13 @@ body {
 .bottom-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 82px;
+  height: 90px;
   background: #111111;
   border-top: 0.5px solid #2c2c2e;
   display: flex;
   align-items: flex-start;
-  padding-top: 8px;
+  padding-top: 10px;
+  padding-bottom: env(safe-area-inset-bottom);
   z-index: 100;
 }
 .nav-it {
@@ -561,7 +555,7 @@ body {
 }
 .nav-it:hover { opacity: 0.7; }
 .nav-it svg {
-  width: 24px; height: 24px;
+  width: 28px; height: 28px;
   stroke: #48484a;
   fill: none;
   stroke-width: 1.6;
@@ -569,7 +563,6 @@ body {
   stroke-linejoin: round;
 }
 .nav-it.active svg { stroke: #7c5cfc; }
-/* Home filled */
 .nav-it.active .ico-home { fill: #7c5cfc; stroke: none; }
 
 /* ── MODAL ── */
@@ -579,7 +572,7 @@ body {
   inset: 0;
   background: rgba(0,0,0,0.65);
   z-index: 500;
-  border-radius: 50px;
+  border-radius: 0;
   overflow: hidden;
   align-items: flex-end;
   justify-content: center;
@@ -689,16 +682,7 @@ body {
 <body>
 
 <div class="phone-shell">
-  <!-- Physical buttons -->
-  <div class="btn-vol-up"></div>
-  <div class="btn-vol-down"></div>
-  <div class="btn-power"></div>
-
-  <div class="phone-bezel"></div>
-
   <div class="phone-screen">
-    <div class="dynamic-island"></div>
-
     <!-- STATUS BAR -->
     <div class="status-bar">
       <span class="status-time" id="clk">23:53</span>
@@ -723,7 +707,8 @@ body {
     </div>
 
     <!-- SCROLL -->
-    <div class="scroll-area">
+    <div class="scroll-area" id="scroll-area">
+      <div class="ptr-indicator" id="ptr"><div class="ptr-spinner" id="ptr-spinner"></div></div>
 
       <!-- HEADER -->
       <div class="wallet-header">
@@ -731,16 +716,16 @@ body {
           <div class="avatar-ring" id="av">🐸</div>
           <div class="wallet-names">
             <span class="wallet-handle" id="w-handle">@squidyxxx</span>
-            <span class="wallet-name" id="w-name">Compte 1</span>
+            <span class="wallet-name" id="w-name">Account 1</span>
           </div>
         </div>
         <div class="header-actions">
           <!-- Clock -->
-          <div class="hdr-btn" onclick="toast('Historique')">
+          <div class="hdr-btn" onclick="toast('History')">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <!-- Search -->
-          <div class="hdr-btn" onclick="toast('Recherche')">
+          <div class="hdr-btn" onclick="toast('Search')">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
         </div>
@@ -757,19 +742,19 @@ body {
 
       <!-- ACTIONS -->
       <div class="action-grid">
-        <button class="act-btn" onclick="toast('Envoyer')">
+        <button class="act-btn" onclick="toast('Send')">
           <div class="act-ico">
             <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </div>
-          <span class="act-lbl">Envoyer</span>
+          <span class="act-lbl">Send</span>
         </button>
-        <button class="act-btn" onclick="toast('Échanger')">
+        <button class="act-btn" onclick="toast('Swap')">
           <div class="act-ico">
             <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
           </div>
-          <span class="act-lbl">Échanger</span>
+          <span class="act-lbl">Swap</span>
         </button>
-        <button class="act-btn" onclick="toast('Adresse copiée')">
+        <button class="act-btn" onclick="toast('Address copied')">
           <div class="act-ico">
             <!-- QR icon -->
             <svg viewBox="0 0 24 24" stroke="#9b8fff" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -789,28 +774,28 @@ body {
               <line x1="14" y1="21" x2="14" y2="21.01"/>
             </svg>
           </div>
-          <span class="act-lbl">Recevoir</span>
+          <span class="act-lbl">Receive</span>
         </button>
         <button class="act-btn" onclick="openBuyModal()">
           <div class="act-ico">
             <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
           </div>
-          <span class="act-lbl">Acheter</span>
+          <span class="act-lbl">Buy</span>
         </button>
       </div>
 
       <!-- CASH CARD -->
       <div class="cash-card">
         <div class="cash-info">
-          <div class="cash-label">Solde Cash</div>
+          <div class="cash-label">Cash Balance</div>
           <div class="cash-val" id="cash-val">$0.00</div>
         </div>
-        <button class="cash-add-btn" onclick="openBuyModal()">Ajouter des espèces</button>
+        <button class="cash-add-btn" onclick="openBuyModal()">Add Cash</button>
       </div>
 
       <!-- TOKENS -->
       <div class="tokens-head">
-        <span class="tokens-head-lbl">Jetons</span>
+        <span class="tokens-head-lbl">Tokens</span>
         <span class="tokens-head-chev">›</span>
       </div>
 
@@ -827,11 +812,11 @@ body {
         <svg viewBox="0 0 24 24"><path class="ico-home" d="M3 12L12 3l9 9v9a1 1 0 01-1 1h-5v-5H9v5H4a1 1 0 01-1-1v-9z"/></svg>
       </div>
       <!-- Wallet -->
-      <div class="nav-it" onclick="toast('Portefeuille')">
+      <div class="nav-it" onclick="toast('Portfolio')">
         <svg viewBox="0 0 24 24"><rect x="1" y="6" width="22" height="14" rx="3"/><path d="M16 10h2"/><path d="M1 10h22"/></svg>
       </div>
       <!-- Swap -->
-      <div class="nav-it" onclick="toast('Échanger')">
+      <div class="nav-it" onclick="toast('Swap')">
         <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
       </div>
       <!-- Chat -->
@@ -848,12 +833,12 @@ body {
     <div class="modal-bg" id="m-search" onclick="if(event.target===this)closeSearch()">
       <div class="modal-sheet" style="max-height:88%;overflow-y:auto;">
         <div class="modal-pill"></div>
-        <div class="modal-ttl">🔍 Ajouter un token</div>
-        <div class="modal-sub">Renseigne les infos du token à afficher dans ton wallet</div>
+        <div class="modal-ttl">🔍 Add a Token</div>
+        <div class="modal-sub">Enter the token details to display in your wallet</div>
 
         <!-- Image upload -->
         <div class="m-field">
-          <div class="m-lbl">Logo du token</div>
+          <div class="m-lbl">Token Logo</div>
           <div id="img-upload-area" onclick="document.getElementById('img-file-input').click()" style="
             width:100%; height:80px; border-radius:14px;
             border: 2px dashed #3a3a3c;
@@ -866,34 +851,34 @@ body {
             </div>
             <div id="img-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
               <span style="font-size:26px;">📷</span>
-              <span style="font-size:12px;color:#636366;font-weight:500;">Appuyer pour choisir une image</span>
+              <span style="font-size:12px;color:#636366;font-weight:500;">Tap to choose an image</span>
             </div>
           </div>
           <input type="file" id="img-file-input" accept="image/*" style="display:none;" onchange="previewImg(this)">
         </div>
 
         <div class="m-field">
-          <div class="m-lbl">Nom du token</div>
-          <input class="m-inp" id="sc-name" placeholder="ex: Ethereum">
+          <div class="m-lbl">Token Name</div>
+          <input class="m-inp" id="sc-name" placeholder="e.g. Ethereum">
         </div>
         <div class="m-field">
           <div class="m-lbl">Ticker</div>
-          <input class="m-inp" id="sc-ticker" placeholder="ex: ETH" style="text-transform:uppercase;">
+          <input class="m-inp" id="sc-ticker" placeholder="e.g. ETH" style="text-transform:uppercase;">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Prix unitaire ($)</div>
-          <input class="m-inp" id="sc-price" type="number" placeholder="ex: 3200.00">
+          <div class="m-lbl">Unit Price ($)</div>
+          <input class="m-inp" id="sc-price" type="number" placeholder="e.g. 3200.00">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Quantité détenue</div>
-          <input class="m-inp" id="sc-qty" type="number" placeholder="ex: 0.5">
+          <div class="m-lbl">Amount Held</div>
+          <input class="m-inp" id="sc-qty" type="number" placeholder="e.g. 0.5">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Variation 24h</div>
-          <input class="m-inp" id="sc-chg" placeholder="ex: +2.4% ou -1.1%">
+          <div class="m-lbl">24h Change</div>
+          <input class="m-inp" id="sc-chg" placeholder="e.g. +2.4% or -1.1%">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Chaîne réseau</div>
+          <div class="m-lbl">Network Chain</div>
           <select class="m-inp" id="sc-chain">
             <option value="sol">🟣 Solana</option>
             <option value="eth">🔵 Ethereum</option>
@@ -904,12 +889,12 @@ body {
             <option value="avax">🔴 Avalanche</option>
             <option value="arb">🔵 Arbitrum</option>
             <option value="op">🔴 Optimism</option>
-            <option value="none">⚪ Autre / Sans badge</option>
+            <option value="none">⚪ Other / No badge</option>
           </select>
         </div>
 
-        <button class="m-btn-ok" onclick="applySearch()">➕ Ajouter au wallet</button>
-        <button class="m-btn-cancel" onclick="closeSearch()">Annuler</button>
+        <button class="m-btn-ok" onclick="applySearch()">➕ Add to Wallet</button>
+        <button class="m-btn-cancel" onclick="closeSearch()">Cancel</button>
       </div>
     </div>
 
@@ -917,33 +902,33 @@ body {
     <div class="modal-bg" id="m-buy" onclick="if(event.target===this)closeBuy()">
       <div class="modal-sheet">
         <div class="modal-pill"></div>
-        <div class="modal-ttl">💰 Modifier le solde</div>
-        <div class="modal-sub">Simule un achat ou ajuste les valeurs affichées</div>
+        <div class="modal-ttl">💰 Edit Balance</div>
+        <div class="modal-sub">Simulate a purchase or adjust displayed values</div>
         <div class="m-field">
-          <div class="m-lbl">Solde total</div>
+          <div class="m-lbl">Total Balance</div>
           <input class="m-inp" id="mi-bal" placeholder="1.53" value="1.53">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Variation ($)</div>
+          <div class="m-lbl">Change ($)</div>
           <input class="m-inp" id="mi-chg" placeholder="-$0.0073223" value="-$0.0073223">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Variation (%)</div>
+          <div class="m-lbl">Change (%)</div>
           <input class="m-inp" id="mi-pct" placeholder="-0.48%" value="-0.48%">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Solde Cash</div>
+          <div class="m-lbl">Cash Balance</div>
           <input class="m-inp" id="mi-cash" placeholder="0.00" value="0.00">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Tendance</div>
+          <div class="m-lbl">Trend</div>
           <select class="m-inp" id="mi-trend">
-            <option value="neg" selected>📉 Négatif (rouge)</option>
-            <option value="pos">📈 Positif (vert)</option>
+            <option value="neg" selected>📉 Negative (red)</option>
+            <option value="pos">📈 Positive (green)</option>
           </select>
         </div>
-        <button class="m-btn-ok" onclick="applyBuy()">Confirmer</button>
-        <button class="m-btn-cancel" onclick="closeBuy()">Annuler</button>
+        <button class="m-btn-ok" onclick="applyBuy()">Confirm</button>
+        <button class="m-btn-cancel" onclick="closeBuy()">Cancel</button>
       </div>
     </div>
 
@@ -951,22 +936,22 @@ body {
     <div class="modal-bg" id="m-acc" onclick="if(event.target===this)closeAcc()">
       <div class="modal-sheet">
         <div class="modal-pill"></div>
-        <div class="modal-ttl">✏️ Modifier le compte</div>
-        <div class="modal-sub">Personnalise l'identité du wallet</div>
+        <div class="modal-ttl">✏️ Edit Account</div>
+        <div class="modal-sub">Customize your wallet identity</div>
         <div class="m-field">
           <div class="m-lbl">Handle</div>
           <input class="m-inp" id="mi-handle" value="@squidyxxx">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Nom du compte</div>
-          <input class="m-inp" id="mi-wname" value="Compte 1">
+          <div class="m-lbl">Account Name</div>
+          <input class="m-inp" id="mi-wname" value="Account 1">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Emoji avatar</div>
+          <div class="m-lbl">Avatar Emoji</div>
           <input class="m-inp" id="mi-emoji" value="🐸">
         </div>
-        <button class="m-btn-ok" onclick="applyAcc()">Enregistrer</button>
-        <button class="m-btn-cancel" onclick="closeAcc()">Annuler</button>
+        <button class="m-btn-ok" onclick="applyAcc()">Save</button>
+        <button class="m-btn-cancel" onclick="closeAcc()">Cancel</button>
       </div>
     </div>
 
@@ -974,14 +959,14 @@ body {
     <div class="modal-bg" id="m-tok" onclick="if(event.target===this)closeTok()">
       <div class="modal-sheet">
         <div class="modal-pill"></div>
-        <div class="modal-ttl" id="mt-ttl">✏️ Modifier le token</div>
-        <div class="modal-sub">Ajuste les valeurs affichées</div>
+        <div class="modal-ttl" id="mt-ttl">✏️ Edit Token</div>
+        <div class="modal-sub">Ajuste les valeurs Displayedes</div>
         <div class="m-field">
           <div class="m-lbl">Solde</div>
           <input class="m-inp" id="mt-sub">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Valeur USD</div>
+          <div class="m-lbl">USD Value</div>
           <input class="m-inp" id="mt-usd">
         </div>
         <div class="m-field">
@@ -989,7 +974,7 @@ body {
           <input class="m-inp" id="mt-chg">
         </div>
         <div class="m-field">
-          <div class="m-lbl">Chaîne réseau</div>
+          <div class="m-lbl">Network Chain</div>
           <select class="m-inp" id="mt-chain">
             <option value="sol">🟣 Solana</option>
             <option value="eth">🔵 Ethereum</option>
@@ -1000,11 +985,11 @@ body {
             <option value="avax">🔴 Avalanche</option>
             <option value="arb">🔵 Arbitrum</option>
             <option value="op">🔴 Optimism</option>
-            <option value="none">⚪ Sans badge</option>
+            <option value="none">⚪ No badge</option>
           </select>
         </div>
-        <button class="m-btn-ok" onclick="applyTok()">Enregistrer</button>
-        <button class="m-btn-cancel" onclick="closeTok()">Annuler</button>
+        <button class="m-btn-ok" onclick="applyTok()">Save</button>
+        <button class="m-btn-cancel" onclick="closeTok()">Cancel</button>
       </div>
     </div>
 
@@ -1114,7 +1099,7 @@ function applyBuy() {
   p.className = 'chg-pill' + (S.pos ? ' up' : '');
   document.getElementById('cash-val').textContent = '$' + S.cash;
   closeBuy();
-  toast('✅ Solde mis à jour');
+  toast('✅ Balance updated');
 }
 
 // ──────────── ACCOUNT MODAL ────────────
@@ -1130,7 +1115,7 @@ function applyAcc() {
   document.getElementById('w-name').textContent   = document.getElementById('mi-wname').value;
   document.getElementById('av').textContent       = document.getElementById('mi-emoji').value;
   closeAcc();
-  toast('✅ Compte modifié');
+  toast('✅ Account updated');
 }
 
 // ──────────── TOKEN MODAL ────────────
@@ -1157,7 +1142,7 @@ function applyTok() {
   t.noChain = (newChain === 'none');
   renderToks();
   closeTok();
-  toast('✅ Token modifié');
+  toast('✅ Token updated');
 }
 
 // ──────────── SEARCH / ADD CRYPTO ────────────
@@ -1202,7 +1187,7 @@ function applySearch() {
   const chain  = document.getElementById('sc-chain').value;
   const isUp   = chg.startsWith('+') ? true : chg.startsWith('-') ? false : null;
 
-  if (!name || !ticker) { toast('⚠️ Nom et ticker requis'); return; }
+  if (!name || !ticker) { toast('⚠️ Name and ticker required'); return; }
 
   const usdVal = (price * qty).toFixed(2);
   const subLbl = qty > 0 ? `${qty} ${ticker}` : `0 ${ticker}`;
@@ -1234,7 +1219,7 @@ function applySearch() {
 
   renderToks();
   closeSearch();
-  toast(`✅ ${name} ajouté !`);
+  toast(`✅ ${name} added!`);
 }
 
 
@@ -1257,6 +1242,72 @@ setInterval(tick, 10000);
 
 // ──────────── INIT ────────────
 renderToks();
+
+  // ── PULL TO REFRESH ──
+  (function() {
+    const scroller = document.getElementById('scroll-area');
+    const ptr = document.getElementById('ptr');
+    const spinner = document.getElementById('ptr-spinner');
+    const screen = document.querySelector('.phone-screen');
+
+    let startY = 0;
+    let pulling = false;
+    let refreshing = false;
+    const THRESHOLD = 72;
+
+    function startRefresh() {
+      if (refreshing) return;
+      refreshing = true;
+      ptr.classList.add('visible');
+      spinner.classList.add('spinning');
+      ptr.style.top = '14px';
+
+      // flash values
+      screen.classList.add('refreshing');
+
+      setTimeout(() => {
+        ptr.style.top = '-60px';
+        ptr.classList.remove('visible');
+        spinner.classList.remove('spinning');
+        screen.classList.remove('refreshing');
+        refreshing = false;
+        pulling = false;
+      }, 1400);
+    }
+
+    scroller.addEventListener('touchstart', e => {
+      if (scroller.scrollTop === 0) {
+        startY = e.touches[0].clientY;
+        pulling = true;
+      }
+    }, { passive: true });
+
+    scroller.addEventListener('touchmove', e => {
+      if (!pulling || refreshing) return;
+      const dy = e.touches[0].clientY - startY;
+      if (dy > 10) {
+        const progress = Math.min(dy / THRESHOLD, 1);
+        ptr.style.top = (-60 + progress * 74) + 'px';
+        ptr.style.opacity = progress;
+        // rotate spinner with finger
+        spinner.style.transform = `rotate(${dy * 2}deg)`;
+      }
+    }, { passive: true });
+
+    scroller.addEventListener('touchend', e => {
+      if (!pulling || refreshing) return;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (dy >= THRESHOLD) {
+        spinner.style.transform = '';
+        startRefresh();
+      } else {
+        ptr.style.top = '-60px';
+        ptr.style.opacity = '0';
+        pulling = false;
+      }
+    }, { passive: true });
+  })();
+
 </script>
 </body>
 </html>
