@@ -99,10 +99,6 @@ height: 100vh;
 height: 100dvh;
 }
 
-body {
-  padding-bottom: 90px;
-}
-
 /* Screen area */
 .phone-screen {
 position: absolute;
@@ -208,64 +204,72 @@ overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
 background: #111111;
 position: relative;
+padding-bottom: calc(78px + env(safe-area-inset-bottom));
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
 /* ── PULL TO REFRESH ── */
 .ptr-indicator {
-position: absolute;
-top: 0; left: 50%;
+position: fixed;
+top: env(safe-area-inset-top, 0px);
+left: 50%;
 transform: translateX(-50%) translateY(-56px);
-width: 36px; height: 36px;
+width: 40px; height: 40px;
 display: flex; align-items: center; justify-content: center;
-z-index: 50;
+z-index: 200;
 pointer-events: none;
-transition: none;
+opacity: 0;
+will-change: transform, opacity;
 }
 .ptr-track {
 position: absolute;
-width: 36px; height: 36px;
+width: 40px; height: 40px;
 border-radius: 50%;
-background: rgba(30,30,32,0.92);
-backdrop-filter: blur(8px);
-box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+background: rgba(28,28,30,0.95);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.08);
 display: flex; align-items: center; justify-content: center;
+transform: scale(0.5);
+will-change: transform;
 }
 .ptr-svg {
 position: absolute;
-width: 36px; height: 36px;
+width: 40px; height: 40px;
 transform: rotate(-90deg);
 }
 .ptr-arc {
 fill: none;
-stroke: #7c5cfc;
+stroke: #9b8fff;
 stroke-width: 2.5;
 stroke-linecap: round;
 stroke-dasharray: 88;
 stroke-dashoffset: 88;
-transition: stroke-dashoffset 0.05s linear;
+opacity: 0;
 }
 .ptr-dot {
-width: 8px; height: 8px;
+width: 7px; height: 7px;
 border-radius: 50%;
-background: #7c5cfc;
+background: #9b8fff;
 opacity: 0;
 transform: scale(0);
-transition: opacity 0.15s, transform 0.15s;
+transition: opacity 0.12s ease, transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
+position: absolute;
 }
 .ptr-spinner-ring {
-width: 22px; height: 22px;
-border: 2.5px solid rgba(124,92,252,0.2);
-border-top-color: #7c5cfc;
+width: 20px; height: 20px;
+border: 2px solid rgba(155,143,255,0.2);
+border-top-color: #9b8fff;
 border-radius: 50%;
 opacity: 0;
 display: none;
+position: absolute;
 }
 @keyframes ptr-spin { to { transform: rotate(360deg); } }
 .ptr-spinner-ring.spinning {
 display: block;
 opacity: 1;
-animation: ptr-spin 0.65s linear infinite;
+animation: ptr-spin 0.7s linear infinite;
 }
 
 /* value flash */
@@ -493,7 +497,7 @@ padding: 0 16px;
 display: flex;
 flex-direction: column;
 gap: 8px;
-padding-bottom: 100px;
+padding-bottom: 0;
 }
 .token-row {
 background: #1c1c1e;
@@ -580,7 +584,7 @@ font-weight: 400;
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
-position: absolute;
+position: fixed;
 bottom: 0; left: 0; right: 0;
 height: 78px;
 background: #161616;
@@ -933,18 +937,7 @@ letter-spacing: -0.1px;
     <!-- rendered by JS -->
   </div>
 
-  <!-- MANAGE TOKEN LIST -->
-  <div class="manage-tokens-btn" onclick="openManageTokens()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
-      <line x1="4" y1="6" x2="20" y2="6"/>
-      <line x1="4" y1="12" x2="20" y2="12"/>
-      <line x1="4" y1="18" x2="20" y2="18"/>
-      <circle cx="9" cy="6" r="2.5" fill="#161616" stroke="#8e8e93"/>
-      <circle cx="15" cy="12" r="2.5" fill="#161616" stroke="#8e8e93"/>
-      <circle cx="9" cy="18" r="2.5" fill="#161616" stroke="#8e8e93"/>
-    </svg>
-    <span>Manage token list</span>
-  </div>
+  <!-- MANAGE TOKEN LIST button rendered by renderToks() -->
 
 </div><!-- /scroll-area -->
 
@@ -1281,7 +1274,7 @@ letter-spacing: -0.1px;
 
 // ──────────── CHAIN LOGOS ────────────
 const CHAIN_LOGOS = {
-  sol: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiM5OTQ1RkYiLz4KICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTkuNSAyMC4yaDE0LjNsLTIuNiAyLjhIOS41em0wLTExaDExLjdsMi42LTIuOEg5LjV6bTAgNS41aDE0LjNsLTIuNiAyLjhIOS41eiIvPgo8L3N2Zz4=",
+  sol: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMwMDAiLz4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2ciIHgxPSI2IiB5MT0iMjIiIHgyPSIyNiIgeTI9IjEwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM5OTQ1RkYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiMxNEYxOTUiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDBDMkZGIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cGF0aCBmaWxsPSJ1cmwoI3NnKSIgZD0iTTguNSAyMC4zYS43LjcgMCAwIDEgLjUtLjJoMTQuOGEuMzUuMzUgMCAwIDEgLjI1LjZsLTIuNDUgMi41NWEuNy43IDAgMCAxLS41LjJINi4zNWEuMzUuMzUgMCAwIDEtLjI1LS42em0wLTExLjVhLjcuNyAwIDAgMSAuNS0uMmgxNC44YS4zNS4zNSAwIDAgMSAuMjUuNkwyMS42IDExLjhhLjcuNyAwIDAgMS0uNS4ySDYuMzVhLjM1LjM1IDAgMCAxLS4yNS0uNnptMTMuMzUgNS43NWEuNy43IDAgMCAwLS41LS4ySDYuNmEuMzUuMzUgMCAwIDAtLjI1LjZsMi40NSAyLjU1YS43LjcgMCAwIDAgLjUuMmgxNC44NWEuMzUuMzUgMCAwIDAgLjI1LS42eiIvPgo8L3N2Zz4=",
   eth: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiM2MjdFRUEiLz4KICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiIGQ9Ik0xNiA0djkuNWw4IDMuNnoiLz4KICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTE2IDRMOCAxNy4xbDgtMy42eiIvPgogIDxwYXRoIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIgZD0iTTE2IDIxLjl2Ni4xbDgtMTEuMXoiLz4KICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTE2IDI4di02LjFMOCAxNi45eiIvPgogIDxwYXRoIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMiIgZD0iTTE2IDIwLjVsOC0zLjQtOC0zLjZ6Ii8+CiAgPHBhdGggZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42IiBkPSJNOCAxNy4xbDggMy40di03eiIvPgo8L3N2Zz4=",
   btc: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNGNzkzMUEiLz4KICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTIyLjUgMTMuOWMuMi0xLjUtLjktMi4zLTIuNS0yLjhsLjUtMi0xLjItLjMtLjUgMmMtLjMtLjEtLjctLjItMS0uMmwuNS0yLTEuMi0uMy0uNSAyYy0uMy0uMS0uNS0uMS0uOC0uMmwtMS43LS40LS4zIDEuM3MuOS4yLjkuMmMuNS4xLjYuNS42LjdsLS42IDIuM2MwIDAtLjEgMC0uMS0uMWwtLjggMy4yYy0uMS4yLS4yLjQtLjYuM2wuMDEuMDItLjktLjIyLS42IDEuNDIgMS42LjRjLjMuMS42LjIuOS4yMmwtLjUgMiAxLjIuMy41LTIuMDFjLjMuMDguNjYuMTcuOTguMjZsLS41IDEuOTkgMS4yMi4zMDUuNS0yLjAzYzIuMS40IDMuNy4yNCA0LjMtMS42NS41My0xLjUyLS4wMy0yLjQtMS4xMy0yLjk3IDEuMDYtLjI0IDEuNzEtLjk0IDEuNzUtMi4yNXptLTMuMTQgNC40Yy0uMzggMS41Mi0yLjk0LjctMy43Ny40OWwuNjctMi42OWMuODMuMjEgMy41LjYyIDMuMS0yLjJabS4zOC00LjQyYy0uMzUgMS4zOC0yLjQ4LjY4LTMuMTcuNTFsLjYxLTIuNDVjLjY5LjE3IDIuOTIuNSAyLjU2IDEuOTRaIi8+Cjwvc3ZnPg==",
   base: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMwMDUyRkYiLz4KICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTE2IDYuNGE5LjYgOS42IDAgMTAwIDE5LjIgOS42IDkuNiAwIDAwMC0xOS4yem0wIDMuNmE2IDYgMCAxMTAgMTJBNiA2IDAgMDExNiAxMHoiLz4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIzLjIiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==",
@@ -1352,7 +1345,7 @@ function renderToks() {
   const computed = computeBalance();
   document.getElementById('bal').textContent = '$' + computed;
   S.balance = computed;
-  document.getElementById('tok-list').innerHTML = S.tokens
+  const tokHTML = S.tokens
     .map((t, i) => ({...t, _i: i}))
     .filter(t => !t.hidden)
     .map(t => `
@@ -1374,6 +1367,16 @@ function renderToks() {
       </div>
     </div>
   `).join('');
+  const manageBtn = `<div class="manage-tokens-btn" onclick="openManageTokens()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+      <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+      <circle cx="9" cy="6" r="2.5" fill="#111111" stroke="#8e8e93"/>
+      <circle cx="15" cy="12" r="2.5" fill="#111111" stroke="#8e8e93"/>
+      <circle cx="9" cy="18" r="2.5" fill="#111111" stroke="#8e8e93"/>
+    </svg>
+    <span>Manage token list</span>
+  </div>`;
+  document.getElementById('tok-list').innerHTML = tokHTML + manageBtn;
 }
 
 // ──────────── MODALS ────────────
@@ -1624,9 +1627,15 @@ function renderManageList() {
   const list = document.getElementById('manage-list');
   const inpS = 'font-size:15px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;';
   const cardS = 'background:#2a2a2c;border-radius:10px;padding:10px 12px;';
+
   list.innerHTML = S.tokens.map((t, i) => `
-    <div id="manage-row-${i}">
+    <div id="manage-row-${i}" data-idx="${i}" class="manage-draggable-row">
       <div style="display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:0.5px solid #2c2c2e;cursor:pointer;" onclick="toggleManageEdit(${i})">
+        <div class="drag-handle" ontouchstart="dragStart(event,${i})" onmousedown="dragStart(event,${i})" onclick="event.stopPropagation()" style="display:flex;flex-direction:column;gap:3.5px;padding:6px 4px;cursor:grab;flex-shrink:0;">
+          <div style="width:18px;height:2px;border-radius:1px;background:#636366;"></div>
+          <div style="width:18px;height:2px;border-radius:1px;background:#636366;"></div>
+          <div style="width:18px;height:2px;border-radius:1px;background:#636366;"></div>
+        </div>
         <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;">${t.logo}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:15px;font-weight:600;color:#fff;">${t.name}</div>
@@ -1649,25 +1658,40 @@ function renderManageList() {
           <div style="${cardS}"><div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">Qty</div><input id="me-qty-${i}" type="number" step="any" value="${t.priceNew && t.usd ? (parseFloat(t.usd.replace(/[$,]/g,''))/t.priceNew).toFixed(6) : (t.sub.match(/^[\d.]+/)||[''])[0]}" oninput="manageAutoCalc(${i})" style="${inpS}"></div>
           <div style="${cardS}"><div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">Price $</div><input id="me-price-${i}" type="number" step="any" value="${t.priceNew||''}" oninput="manageAutoCalc(${i})" style="${inpS}"></div>
           <div style="${cardS}"><div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">Old Price $</div><input id="me-oldprice-${i}" type="number" step="any" value="${t.priceOld||''}" oninput="manageAutoCalc(${i})" style="${inpS}"></div>
-          <div style="${cardS}"><div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">Total $</div><div id="me-usd-display-${i}" style="font-size:15px;font-weight:600;color:#8e8e93;">${t.usd||'$0.00'}</div><input type="hidden" id="me-usd-${i}" value="${t.usd}"><input type="hidden" id="me-sub-${i}" value="${t.sub}"><input type="hidden" id="me-chg-${i}" value="${t.chg}"></div>
+          <div style="${cardS}"><div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">Total $</div><div id="me-total-${i}" style="font-size:15px;font-weight:600;color:#fff;padding-top:2px;">${t.usd}</div></div>
         </div>
-        <select id="me-chain-${i}" style="width:100%;background:#3a3a3c;border:none;border-radius:8px;padding:9px 8px;font-size:13px;color:#fff;font-family:inherit;outline:none;margin-top:4px;">
-          <option value="sol" ${(t.chainKey||'sol')==='sol'?'selected':''}>🟣 Solana</option>
-          <option value="eth" ${t.chainKey==='eth'?'selected':''}>🔵 Ethereum</option>
-          <option value="btc" ${t.chainKey==='btc'?'selected':''}>🟠 Bitcoin</option>
-          <option value="base" ${t.chainKey==='base'?'selected':''}>🔵 Base</option>
-          <option value="matic" ${t.chainKey==='matic'?'selected':''}>🟣 Polygon</option>
-          <option value="bnb" ${t.chainKey==='bnb'?'selected':''}>🟡 BNB</option>
-          <option value="avax" ${t.chainKey==='avax'?'selected':''}>🔴 Avalanche</option>
-          <option value="arb" ${t.chainKey==='arb'?'selected':''}>🔵 Arbitrum</option>
-          <option value="op" ${t.chainKey==='op'?'selected':''}>🔴 Optimism</option>
-          <option value="none" ${t.chainKey==='none'?'selected':''}>⚪ None</option>
-        </select>
-        <button onclick="saveManageEdit(${i})" style="width:100%;margin-top:6px;padding:11px;background:#7c5cfc;border:none;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">Save</button>
+        <div style="${cardS}">
+          <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">Chain</div>
+          <select id="me-chain-${i}" style="font-size:14px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;-webkit-appearance:none;">
+            <option value="sol" style="background:#1c1c1e;">🟣 Solana</option>
+            <option value="eth" style="background:#1c1c1e;">🔵 Ethereum</option>
+            <option value="btc" style="background:#1c1c1e;">🟠 Bitcoin</option>
+            <option value="base" style="background:#1c1c1e;">🔵 Base</option>
+            <option value="matic" style="background:#1c1c1e;">🟣 Polygon</option>
+            <option value="bnb" style="background:#1c1c1e;">🟡 BNB Chain</option>
+            <option value="avax" style="background:#1c1c1e;">🔴 Avalanche</option>
+            <option value="arb" style="background:#1c1c1e;">🔵 Arbitrum</option>
+            <option value="op" style="background:#1c1c1e;">🔴 Optimism</option>
+            <option value="none" style="background:#1c1c1e;">⬜ No Chain</option>
+          </select>
+        </div>
+        <button onclick="saveManageEdit(${i})" style="background:#9b8fff;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;padding:10px;width:100%;cursor:pointer;font-family:inherit;margin-top:4px;">Save</button>
       </div>
     </div>
   `).join('');
+
+  // Set chain selects
+  S.tokens.forEach((t, i) => {
+    const sel = document.getElementById('me-chain-' + i);
+    if (sel) sel.value = t.chainKey || 'sol';
+  });
+
+  // Init drag after render
+  initDragSort();
+
 }
+
+
 function toggleManageEdit(i) {
   S.tokens.forEach((_, j) => {
     const p = document.getElementById('manage-edit-' + j);
@@ -1713,6 +1737,80 @@ function saveManageEdit(i) {
   renderManageList();
   toast('✅ ' + t.name + ' updated');
 }
+// ──────────── DRAG TO REORDER ────────────
+let dragState = null;
+
+function initDragSort() {
+  // No-op: drag is handled via event delegation set on first call
+  if (initDragSort._done) return;
+  initDragSort._done = true;
+}
+
+function dragStart(e, idx) {
+  e.stopPropagation();
+  const list = document.getElementById('manage-list');
+  const rows = [...list.querySelectorAll('.manage-draggable-row')];
+  const row = rows[idx];
+  if (!row) return;
+
+  const rowRect = row.getBoundingClientRect();
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const offsetY = clientY - rowRect.top;
+  const rowH = rowRect.height;
+
+  // Create ghost
+  const ghost = row.cloneNode(true);
+  ghost.style.cssText = `position:fixed;left:${rowRect.left}px;top:${rowRect.top}px;width:${rowRect.width}px;opacity:0.92;background:#2a2a2c;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.6);z-index:9999;pointer-events:none;transform:scale(1.02);transition:transform 0.1s;`;
+  document.body.appendChild(ghost);
+
+  // Dim original
+  row.style.opacity = '0.3';
+
+  dragState = { idx, ghost, row, offsetY, rowH, list, rows, curIdx: idx };
+
+  const move = (ev) => {
+    const y = ev.touches ? ev.touches[0].clientY : ev.clientY;
+    ghost.style.top = (y - offsetY) + 'px';
+
+    // Figure out new position
+    const listRect = list.getBoundingClientRect();
+    const relY = y - listRect.top + list.scrollTop;
+    let newIdx = Math.round(relY / rowH);
+    newIdx = Math.max(0, Math.min(S.tokens.length - 1, newIdx));
+
+    if (newIdx !== dragState.curIdx) {
+      // Reorder S.tokens array live
+      const moved = S.tokens.splice(dragState.idx, 1)[0];
+      S.tokens.splice(newIdx, 0, moved);
+      dragState.idx = newIdx;
+      dragState.curIdx = newIdx;
+      renderManageList();
+      // Reattach after re-render
+      const newRow = list.querySelectorAll('.manage-draggable-row')[newIdx];
+      if (newRow) newRow.style.opacity = '0.3';
+      dragState.row = newRow;
+    }
+  };
+
+  const end = () => {
+    if (dragState) {
+      ghost.remove();
+      if (dragState.row) dragState.row.style.opacity = '1';
+      dragState = null;
+      renderToks();
+    }
+    document.removeEventListener('touchmove', move);
+    document.removeEventListener('touchend', end);
+    document.removeEventListener('mousemove', move);
+    document.removeEventListener('mouseup', end);
+  };
+
+  document.addEventListener('touchmove', move, { passive: true });
+  document.addEventListener('touchend', end);
+  document.addEventListener('mousemove', move);
+  document.addEventListener('mouseup', end);
+}
+
 function toggleToken(i, visible) { S.tokens[i].hidden = !visible; renderToks(); renderManageList(); }
 
 // ──────────── BASE PRICE MODAL ────────────
@@ -1783,110 +1881,132 @@ tick(); setInterval(tick, 10000);
 // ──────────── iOS PULL TO REFRESH ────────────
 (function() {
   const scroller  = document.getElementById('scroll-area');
-  const indicator = document.getElementById('ptr');
-  const arc       = document.getElementById('ptr-arc');
-  const spinRing  = document.getElementById('ptr-spinner-ring');
-  const dot       = document.getElementById('ptr-dot');
-  const DASH      = 88;
+  const indicator = document.getElementById('ptr-indicator');
+  const arc       = indicator ? indicator.querySelector('.ptr-arc') : null;
+  const dot       = indicator ? indicator.querySelector('.ptr-dot') : null;
+  const spinner   = indicator ? indicator.querySelector('.ptr-spinner-ring') : null;
+  const inner     = document.querySelector('.scroll-content-inner');
+
   const THRESHOLD = 72;
-  const MAX_PULL  = 100;
+  const DASH = 88;
+  const MAX_PULL = 110;
+  const RESISTANCE = 0.42;
 
   let startY = 0, pulling = false, refreshing = false, locked = false;
 
   function setPull(dy) {
-    // Rubber-band: resistance increases as you pull further
-    const resistance = 0.45;
-    const clamped = Math.min(dy * resistance, MAX_PULL * resistance);
-    const pct = Math.min(clamped / (THRESHOLD * resistance), 1);
-    
-    // Move indicator down from hidden position
-    indicator.style.transform = `translateX(-50%) translateY(${Math.max(-56 + clamped, -56)}px)`;
-    indicator.style.opacity   = Math.min(pct * 2, 1);
+    if (!indicator) return;
+    const clamped = Math.min(dy, MAX_PULL);
+    const rubber = clamped * RESISTANCE;
+    const pct = Math.min(rubber / (THRESHOLD * RESISTANCE), 1);
 
-    // Fill arc progressively
-    const offset = DASH - DASH * pct;
-    if (arc) arc.style.strokeDashoffset = offset;
+    // Move indicator down smoothly
+    indicator.style.transition = 'none';
+    indicator.style.transform = `translateX(-50%) translateY(${rubber - 8}px)`;
+    indicator.style.opacity = Math.min(pct * 1.4, 1);
 
-    // Rotate arc as you pull
-    const svgEl = document.getElementById('ptr-svg');
-    if (svgEl) svgEl.style.transform = `rotate(${-90 + pct * 180}deg)`;
+    // Scale the bubble
+    const scale = 0.5 + pct * 0.55;
+    const track = indicator.querySelector('.ptr-track');
+    if (track) track.style.transform = `scale(${scale})`;
 
-    // Slight elastic push on scroll content
-    const inner = document.getElementById('scroll-inner');
-    if (inner) inner.style.transform = `translateY(${clamped * 0.4}px)`;
+    // Arc progress
+    if (arc) {
+      arc.style.strokeDashoffset = DASH * (1 - pct);
+      arc.style.opacity = '1';
+    }
+
+    // Show dot when nearly ready
+    if (dot) {
+      dot.style.opacity = pct >= 0.95 ? '1' : '0';
+      dot.style.transform = pct >= 0.95 ? 'scale(1)' : 'scale(0)';
+    }
+
+    // Push content down with rubber band
+    if (inner) {
+      inner.style.transition = 'none';
+      inner.style.transform = `translateY(${rubber * 0.6}px)`;
+    }
   }
 
-  function startRefresh() {
+  function snapBack() {
+    if (!indicator) return;
+    // Smooth snap-back
+    indicator.style.transition = 'transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease';
+    indicator.style.transform = 'translateX(-50%) translateY(-56px)';
+    indicator.style.opacity = '0';
+
+    const track = indicator.querySelector('.ptr-track');
+    if (track) {
+      track.style.transition = 'transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94)';
+      track.style.transform = 'scale(1)';
+    }
+    if (arc) { arc.style.strokeDashoffset = DASH; arc.style.opacity = '0'; }
+    if (dot) { dot.style.opacity = '0'; dot.style.transform = 'scale(0)'; }
+    if (inner) {
+      inner.style.transition = 'transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94)';
+      inner.style.transform = 'translateY(0px)';
+    }
+  }
+
+  function triggerRefresh() {
     refreshing = true;
-    locked = true;
-    // Show spinner, hide arc progress
-    if (arc) arc.style.opacity = '0';
-    if (spinRing) { spinRing.style.display = 'block'; spinRing.classList.add('spinning'); }
-    // Lock indicator in place
-    indicator.style.transform = 'translateX(-50%) translateY(16px)';
-    indicator.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+
+    // Lock indicator in place, show spinner
+    if (indicator) {
+      indicator.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+      indicator.style.transform = `translateX(-50%) translateY(${THRESHOLD * RESISTANCE * 0.6}px)`;
+      indicator.style.opacity = '1';
+      const track = indicator.querySelector('.ptr-track');
+      if (track) { track.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)'; track.style.transform = 'scale(1)'; }
+    }
+    if (arc) { arc.style.opacity = '0'; }
+    if (dot) { dot.style.opacity = '0'; dot.style.transform = 'scale(0)'; }
+    if (spinner) { spinner.classList.add('spinning'); }
+
+    // Keep content pushed slightly
+    if (inner) {
+      inner.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+      inner.style.transform = `translateY(${THRESHOLD * RESISTANCE * 0.35}px)`;
+    }
+
     // Flash values
     document.querySelector('.phone-screen').classList.add('refreshing');
+
     setTimeout(() => {
       document.querySelector('.phone-screen').classList.remove('refreshing');
-      endRefresh();
-    }, 1400);
+      if (spinner) spinner.classList.remove('spinning');
+      snapBack();
+      setTimeout(() => { refreshing = false; locked = false; }, 450);
+    }, 1100);
   }
 
-  function endRefresh() {
-    if (spinRing) { spinRing.classList.remove('spinning'); spinRing.style.display = 'none'; }
-    if (arc) { arc.style.opacity = '1'; arc.style.strokeDashoffset = DASH; }
-    const svgEl = document.getElementById('ptr-svg');
-    if (svgEl) svgEl.style.transform = 'rotate(-90deg)';
-    indicator.style.transition = 'transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s';
-    indicator.style.transform  = 'translateX(-50%) translateY(-56px)';
-    indicator.style.opacity    = '0';
-    const inner = document.getElementById('scroll-inner');
-    if (inner) { inner.style.transition = 'transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)'; inner.style.transform = 'translateY(0px)'; }
-    setTimeout(() => {
-      refreshing = false; locked = false;
-      indicator.style.transition = 'none';
-      if (inner) inner.style.transition = '';
-    }, 450);
-  }
+  if (!scroller) return;
 
   scroller.addEventListener('touchstart', e => {
-    if (refreshing) return;
+    if (refreshing || locked) return;
+    if (scroller.scrollTop > 2) return;
     startY = e.touches[0].clientY;
-    pulling = scroller.scrollTop === 0;
-    if (pulling) {
-      indicator.style.transition = 'none';
-      const inner = document.getElementById('scroll-inner');
-      if (inner) inner.style.transition = '';
-    }
+    pulling = true;
+    if (indicator) indicator.style.opacity = '0';
   }, { passive: true });
 
   scroller.addEventListener('touchmove', e => {
     if (!pulling || refreshing) return;
     const dy = e.touches[0].clientY - startY;
-    if (dy > 0 && scroller.scrollTop === 0) {
-      setPull(dy);
-    } else {
-      setPull(0);
-    }
+    if (dy <= 0) { pulling = false; return; }
+    setPull(dy);
   }, { passive: true });
 
   scroller.addEventListener('touchend', e => {
     if (!pulling || refreshing) return;
     pulling = false;
     const dy = e.changedTouches[0].clientY - startY;
-    const resistance = 0.45;
-    const clamped = Math.min(dy * resistance, MAX_PULL * resistance);
-    if (clamped >= THRESHOLD * resistance) {
-      startRefresh();
+    if (dy * RESISTANCE >= THRESHOLD * RESISTANCE * 0.95) {
+      locked = true;
+      triggerRefresh();
     } else {
-      // Snap back
-      indicator.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.25s';
-      indicator.style.transform  = 'translateX(-50%) translateY(-56px)';
-      indicator.style.opacity    = '0';
-      const inner = document.getElementById('scroll-inner');
-      if (inner) { inner.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)'; inner.style.transform = 'translateY(0)'; }
-      if (arc) arc.style.strokeDashoffset = DASH;
+      snapBack();
     }
   });
 })();
