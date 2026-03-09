@@ -101,11 +101,11 @@ height: 100dvh;
 
 /* Screen area */
 .phone-screen {
-position: absolute;
+position: fixed;
 inset: 0;
 border-radius: 0;
 background: #111111;
-overflow: hidden;
+overflow: visible;
 display: flex;
 flex-direction: column;
 }
@@ -204,7 +204,7 @@ overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
 background: #111111;
 position: relative;
-padding-bottom: calc(78px + env(safe-area-inset-bottom));
+padding-bottom: calc(88px + env(safe-area-inset-bottom));
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -585,14 +585,19 @@ font-weight: 400;
 /* ── BOTTOM NAV ── */
 .bottom-nav {
 position: fixed;
-bottom: 0; left: 0; right: 0;
-height: 78px;
-background: #161616;
-border-top: 0.5px solid #2a2a2a;
+bottom: 0;
+left: 0;
+right: 0;
+height: calc(64px + env(safe-area-inset-bottom));
+background: rgba(22,22,22,0.97);
+border-top: 0.5px solid #333;
 display: flex;
-align-items: center;
+align-items: flex-start;
+padding-top: 10px;
 padding-bottom: env(safe-area-inset-bottom);
-z-index: 100;
+z-index: 9999;
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
 }
 .nav-it {
 flex: 1;
@@ -601,20 +606,28 @@ align-items: center;
 justify-content: center;
 cursor: pointer;
 transition: opacity 0.15s;
-padding-top: 10px;
+-webkit-tap-highlight-color: transparent;
 }
-.nav-it:active { opacity: 0.4; }
+.nav-it:active { opacity: 0.5; }
 .nav-wrap {
 display: flex;
 flex-direction: column;
 align-items: center;
-gap: 8px;
+gap: 4px;
 position: relative;
 }
+.nav-label {
+font-size: 10px;
+font-weight: 500;
+color: #636366;
+letter-spacing: 0.1px;
+line-height: 1;
+}
+.nav-it.active .nav-label { color: #9b8fff; }
 .nav-indicator {
 position: absolute;
-top: -10px;
-width: 30px;
+top: -11px;
+width: 28px;
 height: 3px;
 border-radius: 0 0 3px 3px;
 background: transparent;
@@ -622,18 +635,18 @@ left: 50%;
 transform: translateX(-50%);
 }
 .nav-it.active .nav-indicator {
-background: #7c5cfc;
+background: #9b8fff;
 }
 .nav-it svg {
-width: 28px; height: 28px;
-stroke: #4a4a4e;
+width: 26px; height: 26px;
+stroke: #636366;
 fill: none;
-stroke-width: 1.6;
+stroke-width: 1.8;
 stroke-linecap: round;
 stroke-linejoin: round;
 }
-.nav-it.active svg { stroke: #7c5cfc; }
-.nav-it.active .ico-home { fill: #7c5cfc; stroke: none; }
+.nav-it.active svg { stroke: #9b8fff; }
+.nav-it.active .ico-home { fill: #9b8fff; stroke: none; }
 
 /* ── MANAGE TOKEN LIST BUTTON ── */
 .manage-tokens-btn {
@@ -950,6 +963,7 @@ letter-spacing: -0.1px;
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path class="ico-home" d="M5 12.5L12 5l7 7.5V20a1 1 0 01-1 1H9.5v-4H7.5v4H6a1 1 0 01-1-1v-7.5z"/>
       </svg>
+      <span class="nav-label">Home</span>
     </div>
   </div>
   <!-- NFTs -->
@@ -961,6 +975,7 @@ letter-spacing: -0.1px;
         <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/>
         <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>
       </svg>
+      <span class="nav-label">NFTs</span>
     </div>
   </div>
   <!-- Swap -->
@@ -970,6 +985,7 @@ letter-spacing: -0.1px;
         <path d="M5 17h14M5 17l4-4M5 17l4 4"/>
         <path d="M19 7H5M19 7l-4-4M19 7l-4 4"/>
       </svg>
+      <span class="nav-label">Swap</span>
     </div>
   </div>
   <!-- History -->
@@ -979,6 +995,7 @@ letter-spacing: -0.1px;
         <circle cx="12" cy="12" r="9"/>
         <polyline points="12 7 12 12 15.5 14.5"/>
       </svg>
+      <span class="nav-label">History</span>
     </div>
   </div>
   <!-- Discover / Reference -->
@@ -988,6 +1005,7 @@ letter-spacing: -0.1px;
         <circle cx="12" cy="12" r="9"/>
         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
       </svg>
+      <span class="nav-label">Discover</span>
     </div>
   </div>
   </div>
