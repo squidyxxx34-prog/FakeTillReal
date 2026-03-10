@@ -890,8 +890,6 @@ transition: opacity 0.18s ease, transform 0.2s ease;
 <div class="scroll-area" id="scroll-area"><div class="scroll-content-inner" id="scroll-inner">
   <div class="ptr-indicator" id="ptr">
     <div class="ptr-track">
-      <!-- Pull arc drawn by JS canvas -->
-      <canvas id="ptr-canvas" width="36" height="36" style="position:absolute;top:0;left:0;"></canvas>
       <!-- iSpinner — authentic iOS activity indicator -->
       <div class="ispinner gray" id="ptr-spinner">
         <div class="ispinner-blade"></div>
@@ -1951,100 +1949,65 @@ tick(); setInterval(tick, 10000);
   const indicator = document.getElementById('ptr');
   const spinner   = document.getElementById('ptr-spinner');
   const inner     = document.querySelector('.scroll-content-inner');
-  const canvas    = document.getElementById('ptr-canvas');
-  const ctx       = canvas ? canvas.getContext('2d') : null;
 
-  // Tuning — matches the video: content pushes down ~110px at full pull
-  const THRESHOLD  = 80;   // drag distance to trigger refresh
-  const MAX_PULL   = 160;  // max drag before rubber-band hard cap
-  const RESISTANCE = 0.50; // rubber-band factor
-  const LOCK_Y     = 100;  // how far content stays pushed during spinner
+  const THRESHOLD = 80;  // px of drag before triggering refresh
 
   let startY = 0, pulling = false, refreshing = false, locked = false;
-  let currentY = 0, targetY = 0, rafId = null;
+  let currentDY = 0;
 
-  // rAF loop — lerp currentY toward targetY for silky smooth page movement
-  function animateLoop() {
-    currentY += (targetY - currentY) * 0.16;
-    if (Math.abs(targetY - currentY) < 0.1) currentY = targetY;
+  if (!scroller) return;
 
-    const pct = Math.min(currentY / (THRESHOLD * RESISTANCE), 1);
-    indicator.style.opacity = Math.min(pct * 1.8, 1);
-    drawArc(pct);
-    if (inner) inner.style.transform = `translateY(${currentY}px)`;
+  scroller.addEventListener('touchstart', e => {
+    if (refreshing || locked) return;
+    if (scroller.scrollTop > 2) return;
+    startY  = e.touches[0].clientY;
+    pulling = true;
+    // Remove any transition so page follows finger instantly
+    if (inner) inner.style.transition = 'none';
+    indicator.style.transition = 'none';
+  }, { passive: true });
 
-    if (pulling || Math.abs(targetY - currentY) > 0.1) {
-      rafId = requestAnimationFrame(animateLoop);
-    } else {
-      rafId = null;
-    }
-  }
+  scroller.addEventListener('touchmove', e => {
+    if (!pulling || refreshing) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy <= 0) { pulling = false; return; }
 
-  // Draw partial arc on canvas proportional to pull progress
-  function drawArc(pct) {
-    if (!ctx) return;
-    const sz  = 36;
-    const cx  = sz / 2, cy = sz / 2, r = 13;
-    ctx.clearRect(0, 0, sz, sz);
-    if (pct <= 0) return;
-    // Background track (faint)
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(174,174,178,0.18)';
-    ctx.lineWidth = 2.5;
-    ctx.lineCap   = 'round';
-    ctx.stroke();
-    // Foreground arc
-    const start = -Math.PI / 2;
-    const end   = start + (Math.PI * 2 * Math.min(pct, 1));
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, start, end);
-    ctx.strokeStyle = 'rgba(174,174,178,' + (0.5 + pct * 0.5) + ')';
-    ctx.lineWidth = 2.5;
-    ctx.lineCap   = 'round';
-    ctx.stroke();
-  }
+    currentDY = dy;
 
-  function clearArc() {
-    if (ctx) ctx.clearRect(0, 0, 36, 36);
-  }
+    // Page follows finger 1:1 — no resistance, no cap
+    if (inner) inner.style.transform = `translateY(${dy}px)`;
 
-  function setPull(dy) {
-    targetY = Math.min(dy, MAX_PULL) * RESISTANCE;
-    if (!rafId) rafId = requestAnimationFrame(animateLoop);
-  }
+    // Spinner fades in once past threshold
+    const pct = Math.min(dy / THRESHOLD, 1);
+    indicator.style.opacity = pct >= 1 ? '1' : '0';
+  }, { passive: true });
 
-  function snapBack() {
-    // Stop rAF loop — CSS transition takes over
+  scroller.addEventListener('touchend', () => {
+    if (!pulling || refreshing) return;
     pulling = false;
-    targetY = 0; currentY = 0;
-    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-    const ease = 'cubic-bezier(0.32,0.72,0,1)';
-    indicator.style.transition = 'opacity 0.3s ease';
-    indicator.style.opacity    = '0';
-    clearArc();
-    if (inner) {
-      inner.style.transition = `transform 0.52s ${ease}`;
-      inner.style.transform  = 'translateY(0px)';
+
+    if (currentDY >= THRESHOLD) {
+      locked = true;
+      triggerRefresh();
+    } else {
+      snapBack();
     }
-  }
+    currentDY = 0;
+  });
 
   function triggerRefresh() {
     refreshing = true;
     const ease = 'cubic-bezier(0.32,0.72,0,1)';
 
-    // Hide arc, show spinner
-    clearArc();
-    if (spinner) spinner.classList.add('animating');
-    indicator.style.opacity = '1';
-
-    // Snap content to locked position (pushed down just enough to show spinner)
+    // Snap content to locked position showing spinner
     if (inner) {
       inner.style.transition = `transform 0.32s cubic-bezier(0.34,1.56,0.64,1)`;
-      inner.style.transform  = `translateY(${LOCK_Y}px)`;
+      inner.style.transform  = `translateY(${THRESHOLD}px)`;
     }
+    indicator.style.opacity = '1';
+    if (spinner) spinner.classList.add('animating');
 
-    // Flash values like native refresh
+    // Flash values
     document.querySelector('.phone-screen').classList.add('refreshing');
 
     setTimeout(() => {
@@ -2055,37 +2018,15 @@ tick(); setInterval(tick, 10000);
     }, 1400);
   }
 
-  if (!scroller) return;
-
-  scroller.addEventListener('touchstart', e => {
-    if (refreshing || locked) return;
-    if (scroller.scrollTop > 2) return;
-    startY  = e.touches[0].clientY;
-    pulling = true;
+  function snapBack() {
+    const ease = 'cubic-bezier(0.32,0.72,0,1)';
+    indicator.style.transition = 'opacity 0.25s ease';
     indicator.style.opacity    = '0';
-    indicator.style.transition = 'none';
-    clearArc();
-  }, { passive: true });
-
-  scroller.addEventListener('touchmove', e => {
-    if (!pulling || refreshing) return;
-    const dy = e.touches[0].clientY - startY;
-    if (dy <= 0) { pulling = false; return; }
-    setPull(dy);
-  }, { passive: true });
-
-  scroller.addEventListener('touchend', e => {
-    if (!pulling || refreshing) return;
-    pulling = false;
-    const dy = e.changedTouches[0].clientY - startY;
-    const rubber = Math.min(dy, MAX_PULL) * RESISTANCE;
-    if (rubber >= THRESHOLD * RESISTANCE * 0.9) {
-      locked = true;
-      triggerRefresh();
-    } else {
-      snapBack();
+    if (inner) {
+      inner.style.transition = `transform 0.5s ${ease}`;
+      inner.style.transform  = 'translateY(0px)';
     }
-  });
+  }
 })();
 
 // ──────────── INIT ────────────
