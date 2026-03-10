@@ -217,7 +217,7 @@ position: fixed;
 top: calc(env(safe-area-inset-top, 44px) + 56px);
 left: 50%;
 transform: translateX(-50%);
-width: 36px; height: 36px;
+width: 34px; height: 34px;
 display: flex; align-items: center; justify-content: center;
 z-index: 9998;
 pointer-events: none;
@@ -226,54 +226,48 @@ will-change: opacity;
 }
 /* No pill/bubble — raw spinner only, like native iOS */
 .ptr-track {
-width: 36px; height: 36px;
+width: 34px; height: 34px;
 display: flex; align-items: center; justify-content: center;
 position: relative;
 background: none;
 box-shadow: none;
 }
-/* iOS radial tick spinner — larger, grey/neutral like native */
-.ptr-ios-spinner {
-position: absolute;
-width: 36px; height: 36px;
-opacity: 0;
+/* ── iSPINNER — authentic iOS activity indicator ── */
+.ispinner {
+position: relative;
+width: 34px;
+height: 34px;
 display: none;
 }
-.ptr-tick {
+.ispinner.animating { display: block; }
+.ispinner-blade {
 position: absolute;
-left: 50%; top: 50%;
-width: 2.8px; height: 7px;
-margin-left: -1.4px;
-border-radius: 2px;
-background: #aeaeb2;
-transform-origin: 50% 155%;
+left: 44.5%;
+top: 37%;
+width: 11%;
+height: 26%;
+border-radius: 50%/20%;
+background-color: transparent;
+animation: ispinner-fade 1s linear infinite;
+animation-play-state: paused;
 }
-.ptr-tick:nth-child(1)  { transform: rotate(0deg);    opacity: 1.00; }
-.ptr-tick:nth-child(2)  { transform: rotate(30deg);   opacity: 0.85; }
-.ptr-tick:nth-child(3)  { transform: rotate(60deg);   opacity: 0.70; }
-.ptr-tick:nth-child(4)  { transform: rotate(90deg);   opacity: 0.56; }
-.ptr-tick:nth-child(5)  { transform: rotate(120deg);  opacity: 0.44; }
-.ptr-tick:nth-child(6)  { transform: rotate(150deg);  opacity: 0.33; }
-.ptr-tick:nth-child(7)  { transform: rotate(180deg);  opacity: 0.24; }
-.ptr-tick:nth-child(8)  { transform: rotate(210deg);  opacity: 0.17; }
-.ptr-tick:nth-child(9)  { transform: rotate(240deg);  opacity: 0.11; }
-.ptr-tick:nth-child(10) { transform: rotate(270deg);  opacity: 0.07; }
-.ptr-tick:nth-child(11) { transform: rotate(300deg);  opacity: 0.04; }
-.ptr-tick:nth-child(12) { transform: rotate(330deg);  opacity: 0.02; }
-@keyframes ios-spin {
-from { transform: rotate(0deg); }
-to   { transform: rotate(360deg); }
-}
-.ptr-ios-spinner.spinning {
-display: block;
-opacity: 1;
-animation: ios-spin 1s linear infinite;
-}
-/* Partial arc shown while pulling (fills as you drag) */
-.ptr-arc-ring {
-position: absolute;
-width: 30px; height: 30px;
-border-radius: 50%;
+.ispinner.animating .ispinner-blade { animation-play-state: running; }
+.ispinner-blade:nth-child(1)  { transform: rotate(0deg)   translateY(-142%); animation-delay: 0s; }
+.ispinner-blade:nth-child(2)  { transform: rotate(30deg)  translateY(-142%); animation-delay: -0.9167s; }
+.ispinner-blade:nth-child(3)  { transform: rotate(60deg)  translateY(-142%); animation-delay: -0.8333s; }
+.ispinner-blade:nth-child(4)  { transform: rotate(90deg)  translateY(-142%); animation-delay: -0.75s; }
+.ispinner-blade:nth-child(5)  { transform: rotate(120deg) translateY(-142%); animation-delay: -0.6667s; }
+.ispinner-blade:nth-child(6)  { transform: rotate(150deg) translateY(-142%); animation-delay: -0.5833s; }
+.ispinner-blade:nth-child(7)  { transform: rotate(180deg) translateY(-142%); animation-delay: -0.5s; }
+.ispinner-blade:nth-child(8)  { transform: rotate(210deg) translateY(-142%); animation-delay: -0.4167s; }
+.ispinner-blade:nth-child(9)  { transform: rotate(240deg) translateY(-142%); animation-delay: -0.3333s; }
+.ispinner-blade:nth-child(10) { transform: rotate(270deg) translateY(-142%); animation-delay: -0.25s; }
+.ispinner-blade:nth-child(11) { transform: rotate(300deg) translateY(-142%); animation-delay: -0.1667s; }
+.ispinner-blade:nth-child(12) { transform: rotate(330deg) translateY(-142%); animation-delay: -0.0833s; }
+.ispinner.gray .ispinner-blade { background-color: #8e8e93; }
+@keyframes ispinner-fade {
+0%   { opacity: 1; }
+100% { opacity: 0.15; }
 }
 /* value flash */
 @keyframes val-flash {
@@ -898,12 +892,20 @@ transition: opacity 0.18s ease, transform 0.2s ease;
     <div class="ptr-track">
       <!-- Pull arc drawn by JS canvas -->
       <canvas id="ptr-canvas" width="36" height="36" style="position:absolute;top:0;left:0;"></canvas>
-      <!-- iOS activity spinner shown when refreshing -->
-      <div class="ptr-ios-spinner" id="ptr-spinner">
-        <div class="ptr-tick"></div><div class="ptr-tick"></div><div class="ptr-tick"></div>
-        <div class="ptr-tick"></div><div class="ptr-tick"></div><div class="ptr-tick"></div>
-        <div class="ptr-tick"></div><div class="ptr-tick"></div><div class="ptr-tick"></div>
-        <div class="ptr-tick"></div><div class="ptr-tick"></div><div class="ptr-tick"></div>
+      <!-- iSpinner — authentic iOS activity indicator -->
+      <div class="ispinner gray" id="ptr-spinner">
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
       </div>
     </div>
   </div>
@@ -2025,7 +2027,7 @@ tick(); setInterval(tick, 10000);
 
     // Hide arc, show spinner
     clearArc();
-    if (spinner) spinner.classList.add('spinning');
+    if (spinner) spinner.classList.add('animating');
     indicator.style.opacity = '1';
 
     // Snap content to locked position (pushed down just enough to show spinner)
@@ -2039,7 +2041,7 @@ tick(); setInterval(tick, 10000);
 
     setTimeout(() => {
       document.querySelector('.phone-screen').classList.remove('refreshing');
-      if (spinner) spinner.classList.remove('spinning');
+      if (spinner) spinner.classList.remove('animating');
       snapBack();
       setTimeout(() => { refreshing = false; locked = false; }, 520);
     }, 1400);
