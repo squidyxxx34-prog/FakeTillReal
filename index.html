@@ -1961,6 +1961,24 @@ tick(); setInterval(tick, 10000);
   const LOCK_Y     = 100;  // how far content stays pushed during spinner
 
   let startY = 0, pulling = false, refreshing = false, locked = false;
+  let currentY = 0, targetY = 0, rafId = null;
+
+  // rAF loop — lerp currentY toward targetY for silky smooth page movement
+  function animateLoop() {
+    currentY += (targetY - currentY) * 0.16;
+    if (Math.abs(targetY - currentY) < 0.1) currentY = targetY;
+
+    const pct = Math.min(currentY / (THRESHOLD * RESISTANCE), 1);
+    indicator.style.opacity = Math.min(pct * 1.8, 1);
+    drawArc(pct);
+    if (inner) inner.style.transform = `translateY(${currentY}px)`;
+
+    if (pulling || Math.abs(targetY - currentY) > 0.1) {
+      rafId = requestAnimationFrame(animateLoop);
+    } else {
+      rafId = null;
+    }
+  }
 
   // Draw partial arc on canvas proportional to pull progress
   function drawArc(pct) {
@@ -1992,31 +2010,21 @@ tick(); setInterval(tick, 10000);
   }
 
   function setPull(dy) {
-    const rubber = Math.min(dy, MAX_PULL) * RESISTANCE;
-    const pct    = Math.min(rubber / (THRESHOLD * RESISTANCE), 1);
-
-    // Show spinner container, fade in with pull
-    indicator.style.opacity = Math.min(pct * 1.8, 1);
-
-    // Draw arc on canvas
-    drawArc(pct);
-
-    // Push the content down — this is the big visual effect from the video
-    if (inner) {
-      inner.style.transition = 'none';
-      inner.style.transform  = `translateY(${rubber}px)`;
-    }
+    targetY = Math.min(dy, MAX_PULL) * RESISTANCE;
+    if (!rafId) rafId = requestAnimationFrame(animateLoop);
   }
 
   function snapBack() {
+    // Stop rAF loop — CSS transition takes over
+    pulling = false;
+    targetY = 0; currentY = 0;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     const ease = 'cubic-bezier(0.32,0.72,0,1)';
-    // Fade out spinner
     indicator.style.transition = 'opacity 0.3s ease';
     indicator.style.opacity    = '0';
     clearArc();
-    // Spring content back to zero
     if (inner) {
-      inner.style.transition = `transform 0.5s ${ease}`;
+      inner.style.transition = `transform 0.52s ${ease}`;
       inner.style.transform  = 'translateY(0px)';
     }
   }
