@@ -205,7 +205,7 @@ body {
   -webkit-overflow-scrolling: touch;
   background: #111111;
   position: relative;
-  padding-bottom: calc(54px + env(safe-area-inset-bottom, 34px) + 16px);
+  padding-bottom: calc(68px + env(safe-area-inset-bottom, 34px) + 16px);
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -592,16 +592,17 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: calc(54px + env(safe-area-inset-bottom, 34px));
+  height: calc(68px + env(safe-area-inset-bottom, 34px));
   background: #1c1c1e;
-  border-top: none;
+  border-top: 0.5px solid #2c2c2e;
   display: flex;
   align-items: flex-start;
-  padding-top: 10px;
+  padding-top: 8px;
   padding-left: 8px;
   padding-right: 8px;
   z-index: 9999;
 }
+
 
 .nav-it {
   flex: 1;
@@ -615,8 +616,11 @@ body {
 .nav-it:active { opacity: 0.45; }
 .nav-wrap {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  position: relative;
+  padding-top: 4px;
 }
 .nav-it svg {
   width: 25px; height: 25px;
@@ -627,7 +631,20 @@ body {
   stroke-linejoin: round;
 }
 .nav-it.active svg { stroke: #9b8fff; }
-.nav-it.active .ico-home { fill: #9b8fff; stroke: none; } stroke: none; }
+.nav-it.active .ico-home { fill: #9b8fff; stroke: none; }
+.nav-it .nav-bar {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: transparent;
+}
+.nav-it.active .nav-bar {
+  background: #9b8fff;
+} stroke: none; }
 
 /* ── MANAGE TOKEN LIST BUTTON ── */
 .manage-tokens-btn {
@@ -1958,6 +1975,7 @@ renderToks();
       <!-- Home -->
       <div class="nav-it active" onclick="">
         <div class="nav-wrap">
+          <div class="nav-bar"></div>
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path class="ico-home" d="M3 12L12 3l9 9v9a1 1 0 01-1 1h-5v-5h-6v5H4a1 1 0 01-1-1v-9z"/>
           </svg>
@@ -1966,6 +1984,7 @@ renderToks();
       <!-- Cards -->
       <div class="nav-it" onclick="toast('Cards')">
         <div class="nav-wrap">
+          <div class="nav-bar"></div>
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"/>
             <line x1="2" y1="10" x2="22" y2="10"/>
@@ -1975,6 +1994,7 @@ renderToks();
       <!-- Swap -->
       <div class="nav-it" onclick="toast('Swap')">
         <div class="nav-wrap">
+          <div class="nav-bar"></div>
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
             <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
@@ -1984,6 +2004,7 @@ renderToks();
       <!-- Messages -->
       <div class="nav-it" onclick="toast('Messages')">
         <div class="nav-wrap">
+          <div class="nav-bar"></div>
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
           </svg>
@@ -1992,6 +2013,7 @@ renderToks();
       <!-- Search -->
       <div class="nav-it" onclick="openBaseModal()">
         <div class="nav-wrap">
+          <div class="nav-bar"></div>
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="7"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
