@@ -237,9 +237,8 @@ box-shadow: none;
 position: relative;
 width: 34px;
 height: 34px;
-display: none;
+display: block;
 }
-.ispinner.animating { display: block; }
 .ispinner-blade {
 position: absolute;
 left: 44.5%;
@@ -248,10 +247,14 @@ width: 11%;
 height: 26%;
 border-radius: 50%/20%;
 background-color: transparent;
+opacity: 0;
 animation: ispinner-fade 1s linear infinite;
 animation-play-state: paused;
 }
-.ispinner.animating .ispinner-blade { animation-play-state: running; }
+.ispinner.animating .ispinner-blade {
+animation-play-state: running;
+opacity: 1 !important;
+}
 .ispinner-blade:nth-child(1)  { transform: rotate(0deg)   translateY(-142%); animation-delay: 0s; }
 .ispinner-blade:nth-child(2)  { transform: rotate(30deg)  translateY(-142%); animation-delay: -0.9167s; }
 .ispinner-blade:nth-child(3)  { transform: rotate(60deg)  translateY(-142%); animation-delay: -0.8333s; }
@@ -1965,6 +1968,11 @@ tick(); setInterval(tick, 10000);
     // Remove any transition so page follows finger instantly
     if (inner) inner.style.transition = 'none';
     indicator.style.transition = 'none';
+    indicator.style.opacity = '0';
+    if (spinner) {
+      spinner.classList.remove('animating');
+      spinner.querySelectorAll('.ispinner-blade').forEach(b => b.style.opacity = '');
+    }
   }, { passive: true });
 
   scroller.addEventListener('touchmove', e => {
@@ -1972,14 +1980,24 @@ tick(); setInterval(tick, 10000);
     const dy = e.touches[0].clientY - startY;
     if (dy <= 0) { pulling = false; return; }
 
-    currentDY = dy;
+    // Resistance grows with distance: rubber = dy * (1 / (1 + dy * k))
+    // Starts near 1:1, progressively harder — logarithmic feel
+    const k = 0.012;
+    const rubber = dy * (1 / (1 + dy * k));
+    currentDY = rubber;
+    if (inner) inner.style.transform = `translateY(${rubber}px)`;
 
-    // Page follows finger 1:1 — no resistance, no cap
-    if (inner) inner.style.transform = `translateY(${dy}px)`;
-
-    // Spinner fades in once past threshold
-    const pct = Math.min(dy / THRESHOLD, 1);
-    indicator.style.opacity = pct >= 1 ? '1' : '0';
+    // One blade snaps in every ~20px of raw finger movement
+    const BLADE_STEP = 40;
+    const bladeCount = Math.min(Math.floor(dy / BLADE_STEP), 12);
+    indicator.style.opacity = bladeCount > 0 ? '1' : '0';
+    if (spinner) {
+      spinner.classList.remove('animating');
+      const blades = spinner.querySelectorAll('.ispinner-blade');
+      blades.forEach((b, i) => {
+        b.style.opacity = i < bladeCount ? String(+(1 - i / 12).toFixed(2)) : '0';
+      });
+    }
   }, { passive: true });
 
   scroller.addEventListener('touchend', () => {
@@ -2005,7 +2023,11 @@ tick(); setInterval(tick, 10000);
       inner.style.transform  = `translateY(${THRESHOLD}px)`;
     }
     indicator.style.opacity = '1';
-    if (spinner) spinner.classList.add('animating');
+    if (spinner) {
+      // Reset inline opacity overrides, let CSS animation take over
+      spinner.querySelectorAll('.ispinner-blade').forEach(b => b.style.opacity = '');
+      spinner.classList.add('animating');
+    }
 
     // Flash values
     document.querySelector('.phone-screen').classList.add('refreshing');
@@ -2020,6 +2042,7 @@ tick(); setInterval(tick, 10000);
 
   function snapBack() {
     const ease = 'cubic-bezier(0.32,0.72,0,1)';
+    if (spinner) spinner.classList.remove('animating');
     indicator.style.transition = 'opacity 0.25s ease';
     indicator.style.opacity    = '0';
     if (inner) {
