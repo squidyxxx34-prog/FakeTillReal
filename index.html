@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="fr" style="height:100%;overflow:hidden;">
+<html lang="fr" style="height:100%;overflow:hidden;background:#111111;">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FakeTillReal</title>
 
   <!-- PWA -->
@@ -48,9 +48,9 @@
 
   <style>
     /* Hide Safari UI on iOS when launched from home screen */
-    html, body { height: 100%; width: 100%; overflow: hidden; }
+    html, body { height: 100%; width: 100%; overflow: hidden; background: #111111; }
     /* Safe area for iPhone notch */
-    .phone-shell { height: 100%; width: 100%; position: fixed; top: 0; left: 0; }
+    .phone-shell { width: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #111111; }
   </style>
 
   <!-- Service Worker for offline -->
@@ -101,7 +101,7 @@ height: 100dvh;
 
 /* Screen area */
 .phone-screen {
-position: absolute;
+position: fixed;
 top: 0; left: 0; right: 0; bottom: 0;
 border-radius: 0;
 background: #111111;
@@ -206,7 +206,7 @@ overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
 background: #111111;
 position: relative;
-padding-bottom: 24px;
+padding-bottom: calc(54px + env(safe-area-inset-bottom, 34px) + 16px);
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -589,18 +589,28 @@ font-weight: 400;
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
-flex-shrink: 0;
-height: calc(56px + env(safe-area-inset-bottom));
-background: rgba(17,17,17,0.82);
-border-top: 0.5px solid rgba(255,255,255,0.08);
+position: fixed;
+bottom: env(safe-area-inset-bottom, 34px);
+left: 0;
+right: 0;
+height: 54px;
+background: #1c1c1e;
+border-top: none;
 display: flex;
 align-items: center;
-padding-bottom: env(safe-area-inset-bottom);
 padding-left: 8px;
 padding-right: 8px;
 z-index: 9999;
-backdrop-filter: blur(28px);
--webkit-backdrop-filter: blur(28px);
+}
+.bottom-nav::after {
+content: “”;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+height: env(safe-area-inset-bottom, 34px);
+background: #1c1c1e;
+z-index: 9998;
 }
 .nav-it {
 flex: 1;
@@ -939,55 +949,11 @@ letter-spacing: -0.1px;
   <!-- MANAGE TOKEN LIST button rendered by renderToks() -->
 
 </div><!-- /scroll-area -->
+```
 
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <!-- Home -->
-  <div class="nav-it active" onclick="">
-    <div class="nav-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path class="ico-home" d="M3 12L12 3l9 9v9a1 1 0 01-1 1h-5v-5h-6v5H4a1 1 0 01-1-1v-9z"/>
-      </svg>
-    </div>
-  </div>
-  <!-- Cards -->
-  <div class="nav-it" onclick="toast('Cards')">
-    <div class="nav-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="5" width="20" height="14" rx="2"/>
-        <line x1="2" y1="10" x2="22" y2="10"/>
-      </svg>
-    </div>
-  </div>
-  <!-- Swap -->
-  <div class="nav-it" onclick="toast('Swap')">
-    <div class="nav-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
-        <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
-      </svg>
-    </div>
-  </div>
-  <!-- Messages -->
-  <div class="nav-it" onclick="toast('Messages')">
-    <div class="nav-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-      </svg>
-    </div>
-  </div>
-  <!-- Search -->
-  <div class="nav-it" onclick="openBaseModal()">
-    <div class="nav-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="7"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-    </div>
-  </div>
-  </div>
 </div>
 
+```
 <!-- ADD CRYPTO MODAL -->
 <div class="modal-bg" id="m-search" onclick="if(event.target===this)closeSearch()">
   <div class="modal-sheet" style="max-height:88%;overflow-y:auto;">
@@ -2006,5 +1972,50 @@ renderToks();
 
 </script>
 
+<div class="bottom-nav">
+      <!-- Home -->
+      <div class="nav-it active" onclick="">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path class="ico-home" d="M3 12L12 3l9 9v9a1 1 0 01-1 1h-5v-5h-6v5H4a1 1 0 01-1-1v-9z"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Cards -->
+      <div class="nav-it" onclick="toast('Cards')">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Swap -->
+      <div class="nav-it" onclick="toast('Swap')">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
+            <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Messages -->
+      <div class="nav-it" onclick="toast('Messages')">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Search -->
+      <div class="nav-it" onclick="openBaseModal()">
+        <div class="nav-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+      </div>
+      </div>
 </body>
 </html>
