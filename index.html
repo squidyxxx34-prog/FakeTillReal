@@ -213,16 +213,16 @@ padding-bottom: calc(58px + env(safe-area-inset-bottom, 34px) + 16px);
 /* ── PULL TO REFRESH ── */
 /* Fixed-position spinner — stays put, content slides under it */
 .ptr-indicator {
-position: fixed;
-top: calc(env(safe-area-inset-top, 44px) + 16px);
+position: absolute;
+top: 0;
 left: 50%;
-transform: translateX(-50%);
+transform: translateX(-50%) translateY(0px);
 width: 40px; height: 40px;
 display: flex; align-items: center; justify-content: center;
-z-index: 9998;
 pointer-events: none;
-opacity: 0;
-will-change: transform, opacity;
+opacity: 1;
+z-index: 10;
+will-change: transform;
 }
 /* No pill/bubble — raw spinner only, like native iOS */
 .ptr-track {
@@ -889,7 +889,7 @@ letter-spacing: -0.1px;
     </div>
 
 <!-- SCROLL -->
-<div class="scroll-area" id="scroll-area"><div class="scroll-content-inner" id="scroll-inner">
+<div class="scroll-area" id="scroll-area">
   <div class="ptr-indicator" id="ptr">
     <div class="ptr-track">
       <!-- iSpinner — authentic iOS activity indicator -->
@@ -905,6 +905,7 @@ letter-spacing: -0.1px;
       </div>
     </div>
   </div>
+<div class="scroll-content-inner" id="scroll-inner">
 
   <!-- HEADER -->
   <div class="wallet-header">
@@ -1009,6 +1010,7 @@ letter-spacing: -0.1px;
 
   <!-- MANAGE TOKEN LIST button rendered by renderToks() -->
 
+</div><!-- /scroll-inner -->
 </div><!-- /scroll-area -->
 
 </div>
@@ -1284,7 +1286,7 @@ letter-spacing: -0.1px;
 <!-- TOAST -->
 <div class="toast-pill" id="tp"></div>
 
-  </div><!-- /scroll-inner --></div><!-- /phone-screen -->
+  </div><!-- /phone-screen -->
 </div><!-- /phone-shell -->
 
 <script>
@@ -1939,10 +1941,11 @@ tick(); setInterval(tick, 10000);
 
   function resetSpinner() {
     spinner.classList.remove('spinning');
+    indicator.style.transform = 'translateX(-50%) translateY(0px)';
     blades.forEach(b => { b.style.opacity = '0'; b.style.animationDelay = ''; });
     indicator.style.transition = 'none';
-    indicator.style.opacity    = '0';
-    indicator.style.transform  = 'translateX(-50%) translateY(0px)';
+
+
     headPct = 0;
     full    = false;
   }
@@ -1961,7 +1964,7 @@ tick(); setInterval(tick, 10000);
         ? String(+(1 - behind / n).toFixed(3))
         : '0';
     });
-    indicator.style.opacity = String(Math.min(pct * 2, 1).toFixed(2));
+
   }
 
   // Kick off CSS spin animation starting exactly from headPct
@@ -1977,16 +1980,16 @@ tick(); setInterval(tick, 10000);
       b.style.animationDelay = `${-behind * DURATION}s`;
     });
     spinner.classList.add('spinning');
-    indicator.style.opacity = '1';
+
   }
 
   function snapBack(cb) {
     const ease = 'cubic-bezier(0.32,0.72,0,1)';
     inner.style.transition      = `transform 0.45s ${ease}`;
     inner.style.transform       = 'translateY(0px)';
-    indicator.style.transition  = `transform 0.45s ${ease}, opacity 0.45s ${ease}`;
-    indicator.style.transform   = 'translateX(-50%) translateY(0px)';
-    indicator.style.opacity     = '0';
+    indicator.style.transition  = `transform 0.45s ${ease}`;
+    indicator.style.transform   = 'translateX(-50%) translateY(-56px)';
+
     setTimeout(cb, 450);
   }
 
@@ -1996,7 +1999,7 @@ tick(); setInterval(tick, 10000);
     startY = e.touches[0].clientY;
     pulling = true;
     inner.style.transition      = 'none';
-    indicator.style.transition  = 'none';
+    indicator.style.transition = 'none';
     resetSpinner();
   }, { passive: true });
 
@@ -2006,17 +2009,17 @@ tick(); setInterval(tick, 10000);
     if (dy <= 0) { pulling = false; return; }
 
     const rubber = dy * (1 / (1 + dy * 0.012));
-    inner.style.transform      = `translateY(${rubber}px)`;
-    indicator.style.transform  = `translateX(-50%) translateY(${rubber * 0.05}px)`;
+    inner.style.transform = `translateY(${rubber}px)`;
+    // Spinner slides in from top: starts at -60px, reaches TARGET_Y at full pull
+    const spinY = dy / 25;
+    indicator.style.transform = `translateX(-50%) translateY(${spinY}px)`;
 
-    if (full) return; // frozen at max — ignore further drag
-
+    // Spinner freezes at pct=1 but page keeps dragging
     const rawPct = Math.min(dy / TRIGGER_AT, 1);
-    headPct = rawPct;
-    showBlades(rawPct);
-
-    if (rawPct >= 1) {
-      full = true; // freeze here — showBlades already drew pct=1
+    if (!full) {
+      headPct = rawPct;
+      showBlades(rawPct);
+      if (rawPct >= 1) full = true;
     }
   }, { passive: true });
 
