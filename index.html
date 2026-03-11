@@ -51,7 +51,98 @@
     html, body { height: 100%; width: 100%; overflow: hidden; background: #111111; }
     /* Safe area for iPhone notch */
     .phone-shell { width: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #111111; }
-  </style>
+  
+/* ── LOGIN SCREEN ── */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  background: #111111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: env(safe-area-inset-top) 32px env(safe-area-inset-bottom);
+  gap: 0;
+  transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
+}
+#login-screen.hidden {
+  opacity: 0;
+  transform: translateY(-24px);
+  pointer-events: none;
+}
+.login-logo {
+  font-size: 48px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 24px rgba(155,143,255,0.4));
+}
+.login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.login-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 48px;
+  letter-spacing: 0.2px;
+}
+.login-field {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.login-field input {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: #fff;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+}
+.login-field input::placeholder { color: rgba(255,255,255,0.25); }
+.login-field input:focus {
+  border-color: rgba(155,143,255,0.5);
+  background: rgba(155,143,255,0.07);
+}
+.login-btn {
+  width: 100%;
+  max-width: 320px;
+  background: #9b8fff;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 17px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  letter-spacing: 0.1px;
+}
+.login-btn:active { opacity: 0.8; transform: scale(0.98); }
+.login-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-top: 12px;
+  min-height: 18px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.login-error.show { opacity: 1; }
+
+</style>
 
   <!-- Service Worker for offline -->
 
@@ -234,38 +325,38 @@ box-shadow: none;
 }
 /* ── iSPINNER — authentic iOS activity indicator ── */
 .ispinner {
-  position: relative;
-  width: 28px;
-  height: 28px;
-  display: block;
+position: relative;
+width: 28px;
+height: 28px;
+display: block;
 }
 .ispinner-large {
-  width: 40px;
-  height: 40px;
+width: 40px;
+height: 40px;
 }
 .ispinner-blade {
-  position: absolute;
-  left: 44.5%;
-  top: 37%;
-  width: 10%;
-  height: 26%;
-  border-radius: 50%/20%;
-  background-color: transparent;
-  opacity: 0;
+position: absolute;
+left: 44.5%;
+top: 37%;
+width: 10%;
+height: 26%;
+border-radius: 50%/20%;
+background-color: transparent;
+opacity: 0;
 }
 .ispinner-large .ispinner-blade {
-  width: 7%;
-  height: 22%;
-  left: 46.5%;
-  top: 38%;
+width: 7%;
+height: 22%;
+left: 46.5%;
+top: 38%;
 }
 /* Release spin — smooth comet tail, all blades always visible */
 .ispinner.spinning .ispinner-blade {
-  animation: ispinner-release 1.2s linear infinite;
+animation: ispinner-release 1.2s linear infinite;
 }
 @keyframes ispinner-release {
-  0%   { opacity: 1; }
-  100% { opacity: 0.12; }
+0%   { opacity: 1; }
+100% { opacity: 0.12; }
 }
 .ispinner-blade:nth-child(1) { transform: rotate(0deg)   translateY(-120%); }
 .ispinner-blade:nth-child(2) { transform: rotate(45deg)  translateY(-120%); }
@@ -285,8 +376,8 @@ box-shadow: none;
 .ispinner.spinning .ispinner-blade:nth-child(8) { animation-delay: -0.15s; }
 .ispinner.gray .ispinner-blade { background-color: #8e8e93; }
 @keyframes ispinner-fade {
-  0%   { opacity: 1; }
-  100% { opacity: 0; }
+0%   { opacity: 1; }
+100% { opacity: 0; }
 }
 
 /* elastic content push — controlled entirely by JS */
@@ -412,9 +503,9 @@ background: #2c2c2f;
 animation: ios-btn-press 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes ios-btn-press {
-  0%   { transform: scale(1); }
-  30%  { transform: scale(0.92); }
-  100% { transform: scale(1); }
+0%   { transform: scale(1); }
+30%  { transform: scale(0.92); }
+100% { transform: scale(1); }
 }
 .act-ico {
 width: 24px; height: 24px;
@@ -632,9 +723,9 @@ will-change: transform;
 animation: ios-nav-tap 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes ios-nav-tap {
-  0%   { transform: scale(1); opacity: 1; }
-  20%  { transform: scale(0.88); opacity: 0.5; }
-  100% { transform: scale(1); opacity: 1; }
+0%   { transform: scale(1); opacity: 1; }
+20%  { transform: scale(0.88); opacity: 0.5; }
+100% { transform: scale(1); opacity: 1; }
 }
 .nav-wrap {
 display: flex;
@@ -749,12 +840,12 @@ transform-origin: bottom center;
 animation: su-dismiss 0.35s cubic-bezier(0.32,0.72,0,1) forwards;
 }
 @keyframes su {
-  0%   { transform: translateY(110%); }
-  100% { transform: translateY(0); }
+0%   { transform: translateY(110%); }
+100% { transform: translateY(0); }
 }
 @keyframes su-dismiss {
-  0%   { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(110%); opacity: 0; }
+0%   { transform: translateY(0); opacity: 1; }
+100% { transform: translateY(110%); opacity: 0; }
 }
 .modal-pill {
 width: 36px; height: 4px;
@@ -846,22 +937,131 @@ z-index: 800;
 opacity: 0;
 pointer-events: none;
 transition: opacity 0.22s cubic-bezier(0.34,1.56,0.64,1),
-            transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
 letter-spacing: -0.1px;
 }
 .toast-pill.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0) scale(1);
+opacity: 1;
+transform: translateX(-50%) translateY(0) scale(1);
 }
 .toast-pill.hiding {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-6px) scale(0.92);
-  transition: opacity 0.18s ease, transform 0.2s ease;
+opacity: 0;
+transform: translateX(-50%) translateY(-6px) scale(0.92);
+transition: opacity 0.18s ease, transform 0.2s ease;
 }
+
+/* ── LOGIN SCREEN ── */
+#login-screen {
+position: fixed;
+inset: 0;
+background: #111111;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 99999;
+padding: env(safe-area-inset-top) 32px env(safe-area-inset-bottom);
+gap: 0;
+transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
+}
+#login-screen.hidden {
+opacity: 0;
+transform: translateY(-24px);
+pointer-events: none;
+}
+.login-logo {
+font-size: 48px;
+margin-bottom: 12px;
+filter: drop-shadow(0 0 24px rgba(155,143,255,0.4));
+}
+.login-title {
+font-size: 28px;
+font-weight: 700;
+color: #fff;
+letter-spacing: -0.5px;
+margin-bottom: 6px;
+}
+.login-sub {
+font-size: 14px;
+color: rgba(255,255,255,0.35);
+margin-bottom: 48px;
+letter-spacing: 0.2px;
+}
+.login-field {
+width: 100%;
+max-width: 320px;
+margin-bottom: 14px;
+position: relative;
+}
+.login-field input {
+width: 100%;
+background: rgba(255,255,255,0.06);
+border: 1px solid rgba(255,255,255,0.09);
+border-radius: 14px;
+padding: 16px 18px;
+color: #fff;
+font-size: 16px;
+font-family: inherit;
+outline: none;
+box-sizing: border-box;
+transition: border-color 0.2s, background 0.2s;
+-webkit-appearance: none;
+}
+.login-field input::placeholder { color: rgba(255,255,255,0.25); }
+.login-field input:focus {
+border-color: rgba(155,143,255,0.5);
+background: rgba(155,143,255,0.07);
+}
+.login-btn {
+width: 100%;
+max-width: 320px;
+background: #9b8fff;
+color: #fff;
+border: none;
+border-radius: 14px;
+padding: 17px;
+font-size: 16px;
+font-weight: 600;
+font-family: inherit;
+margin-top: 8px;
+cursor: pointer;
+transition: opacity 0.15s, transform 0.15s;
+letter-spacing: 0.1px;
+}
+.login-btn:active { opacity: 0.8; transform: scale(0.98); }
+.login-error {
+color: #ff6b6b;
+font-size: 13px;
+margin-top: 12px;
+min-height: 18px;
+text-align: center;
+opacity: 0;
+transition: opacity 0.2s;
+}
+.login-error.show { opacity: 1; }
+
 </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+
+<div id="login-screen">
+  <div class="login-logo">🐸</div>
+  <div class="login-title">FakeTillReal</div>
+  <div class="login-sub">Sign in to your wallet</div>
+  <div class="login-field">
+    <input id="login-user" type="email" placeholder="Email" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false"/>
+  </div>
+  <div class="login-field">
+    <input id="login-pass" type="password" placeholder="Password" autocomplete="current-password"/>
+  </div>
+  <button class="login-btn" onclick="doLogin()">Sign In</button>
+  <div class="login-error" id="login-err">Incorrect username or password</div>
+</div>
 
 <div class="phone-shell">
   <div class="phone-screen">
@@ -889,6 +1089,7 @@ letter-spacing: -0.1px;
     </div>
 
 <!-- SCROLL -->
+
 <div class="scroll-area" id="scroll-area">
   <div class="ptr-indicator" id="ptr">
     <div class="ptr-track">
@@ -908,6 +1109,7 @@ letter-spacing: -0.1px;
 <div class="scroll-content-inner" id="scroll-inner">
 
   <!-- HEADER -->
+
   <div class="wallet-header">
     <div class="wallet-ident" onclick="openAccModal()">
       <div class="avatar-ring" id="av">🐸</div>
@@ -929,6 +1131,7 @@ letter-spacing: -0.1px;
   </div>
 
   <!-- BALANCE -->
+
   <div class="balance-block">
     <div class="balance-num" id="bal" onclick="openBuyModal()">$1.53</div>
     <div class="balance-change">
@@ -938,6 +1141,7 @@ letter-spacing: -0.1px;
   </div>
 
   <!-- ACTIONS -->
+
   <div class="action-grid">
     <!-- Receive: QR code -->
     <button class="act-btn" onclick="toast('Address copied')">
@@ -990,6 +1194,7 @@ letter-spacing: -0.1px;
   </div>
 
   <!-- CASH CARD -->
+
   <div class="cash-card">
     <div class="cash-info">
       <div class="cash-label">Cash Balance</div>
@@ -999,6 +1204,7 @@ letter-spacing: -0.1px;
   </div>
 
   <!-- TOKENS -->
+
   <div class="tokens-head">
     <span class="tokens-head-lbl">Tokens</span>
     <span class="tokens-head-chev">›</span>
@@ -1016,81 +1222,86 @@ letter-spacing: -0.1px;
 </div>
 
 <!-- ADD CRYPTO MODAL -->
+
 <div class="modal-bg" id="m-search" onclick="if(event.target===this)closeSearch()">
   <div class="modal-sheet" style="max-height:88%;overflow-y:auto;">
     <div class="modal-pill"></div>
     <div class="modal-ttl">🔍 Add a Token</div>
     <div class="modal-sub">Enter the token details to display in your wallet</div>
 
-    <!-- Image upload -->
-    <div class="m-field">
-      <div class="m-lbl">Token Logo</div>
-      <div id="img-upload-area" onclick="document.getElementById('img-file-input').click()" style="
-        width:100%; height:80px; border-radius:14px;
-        border: 2px dashed #3a3a3c;
-        display:flex; align-items:center; justify-content:center;
-        cursor:pointer; gap:14px; transition: border-color 0.2s;
-        background:#2c2c2e;
-      ">
-        <div id="img-preview-wrap" style="display:none;">
-          <img id="img-preview" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
-        </div>
-        <div id="img-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <span style="font-size:26px;">📷</span>
-          <span style="font-size:12px;color:#636366;font-weight:500;">Tap to choose an image</span>
-        </div>
-      </div>
-      <input type="file" id="img-file-input" accept="image/*" style="display:none;" onchange="previewImg(this)">
+```
+<!-- Image upload -->
+<div class="m-field">
+  <div class="m-lbl">Token Logo</div>
+  <div id="img-upload-area" onclick="document.getElementById('img-file-input').click()" style="
+    width:100%; height:80px; border-radius:14px;
+    border: 2px dashed #3a3a3c;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; gap:14px; transition: border-color 0.2s;
+    background:#2c2c2e;
+  ">
+    <div id="img-preview-wrap" style="display:none;">
+      <img id="img-preview" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
     </div>
+    <div id="img-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <span style="font-size:26px;">📷</span>
+      <span style="font-size:12px;color:#636366;font-weight:500;">Tap to choose an image</span>
+    </div>
+  </div>
+  <input type="file" id="img-file-input" accept="image/*" style="display:none;" onchange="previewImg(this)">
+</div>
 
-    <div class="m-field">
-      <div class="m-lbl">Token Name</div>
-      <input class="m-inp" id="sc-name" placeholder="e.g. Ethereum">
-    </div>
-    <div class="m-field">
-      <div class="m-lbl">Ticker</div>
-      <input class="m-inp" id="sc-ticker" placeholder="e.g. ETH" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-      <div>
-        <div class="m-lbl">Total value ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-        <input class="m-inp" id="sc-usd" type="number" placeholder="e.g. 1200.00" oninput="searchAutoCalc()">
-      </div>
-      <div>
-        <div class="m-lbl">Price / token ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-        <input class="m-inp" id="sc-price" type="number" placeholder="e.g. 3200.00" oninput="searchAutoCalc()">
-      </div>
-    </div>
-    <div class="m-field">
-      <div class="m-lbl">Amount Held <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-      <input class="m-inp" id="sc-qty" type="number" placeholder="e.g. 0.5" oninput="searchAutoCalc()">
-    </div>
-    <div class="m-field">
-      <div class="m-lbl">24h Change <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-      <input class="m-inp" id="sc-chg" placeholder="e.g. +2.4% or -1.1%">
-    </div>
-    <div class="m-field">
-      <div class="m-lbl">Network Chain</div>
-      <select class="m-inp" id="sc-chain">
-        <option value="sol">🟣 Solana</option>
-        <option value="eth">🔵 Ethereum</option>
-        <option value="btc">🟠 Bitcoin</option>
-        <option value="base">🔵 Base</option>
-        <option value="matic">🟣 Polygon</option>
-        <option value="bnb">🟡 BNB Chain</option>
-        <option value="avax">🔴 Avalanche</option>
-        <option value="arb">🔵 Arbitrum</option>
-        <option value="op">🔴 Optimism</option>
-        <option value="none">⚪ Other / No badge</option>
-      </select>
-    </div>
+<div class="m-field">
+  <div class="m-lbl">Token Name</div>
+  <input class="m-inp" id="sc-name" placeholder="e.g. Ethereum">
+</div>
+<div class="m-field">
+  <div class="m-lbl">Ticker</div>
+  <input class="m-inp" id="sc-ticker" placeholder="e.g. ETH" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+  <div>
+    <div class="m-lbl">Total value ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+    <input class="m-inp" id="sc-usd" type="number" placeholder="e.g. 1200.00" oninput="searchAutoCalc()">
+  </div>
+  <div>
+    <div class="m-lbl">Price / token ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+    <input class="m-inp" id="sc-price" type="number" placeholder="e.g. 3200.00" oninput="searchAutoCalc()">
+  </div>
+</div>
+<div class="m-field">
+  <div class="m-lbl">Amount Held <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+  <input class="m-inp" id="sc-qty" type="number" placeholder="e.g. 0.5" oninput="searchAutoCalc()">
+</div>
+<div class="m-field">
+  <div class="m-lbl">24h Change <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+  <input class="m-inp" id="sc-chg" placeholder="e.g. +2.4% or -1.1%">
+</div>
+<div class="m-field">
+  <div class="m-lbl">Network Chain</div>
+  <select class="m-inp" id="sc-chain">
+    <option value="sol">🟣 Solana</option>
+    <option value="eth">🔵 Ethereum</option>
+    <option value="btc">🟠 Bitcoin</option>
+    <option value="base">🔵 Base</option>
+    <option value="matic">🟣 Polygon</option>
+    <option value="bnb">🟡 BNB Chain</option>
+    <option value="avax">🔴 Avalanche</option>
+    <option value="arb">🔵 Arbitrum</option>
+    <option value="op">🔴 Optimism</option>
+    <option value="none">⚪ Other / No badge</option>
+  </select>
+</div>
 
-    <button class="m-btn-ok" onclick="applySearch()">➕ Add to Wallet</button>
-    <button class="m-btn-cancel" onclick="closeSearch()">Cancel</button>
+<button class="m-btn-ok" onclick="applySearch()">➕ Add to Wallet</button>
+<button class="m-btn-cancel" onclick="closeSearch()">Cancel</button>
+```
+
   </div>
 </div>
 
 <!-- BUY/EDIT MODAL -->
+
 <div class="modal-bg" id="m-buy" onclick="if(event.target===this)closeBuy()">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
@@ -1127,6 +1338,7 @@ letter-spacing: -0.1px;
 </div>
 
 <!-- ACCOUNT MODAL -->
+
 <div class="modal-bg" id="m-acc" onclick="if(event.target===this)closeAcc()">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
@@ -1150,84 +1362,88 @@ letter-spacing: -0.1px;
 </div>
 
 <!-- TOKEN EDIT MODAL -->
+
 <div class="modal-bg" id="m-tok" onclick="if(event.target===this)closeTok()">
   <div class="modal-sheet" style="padding-bottom:28px;">
     <div class="modal-pill"></div>
 
-    <!-- Token header -->
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-      <div id="mt-logo-preview" style="width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;"></div>
-      <div>
-        <div id="mt-ttl" style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.3px;"></div>
-        <div id="mt-sub-title" style="font-size:12px;color:#636366;margin-top:1px;"></div>
-      </div>
+```
+<!-- Token header -->
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+  <div id="mt-logo-preview" style="width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;"></div>
+  <div>
+    <div id="mt-ttl" style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.3px;"></div>
+    <div id="mt-sub-title" style="font-size:12px;color:#636366;margin-top:1px;"></div>
+  </div>
+</div>
+
+<!-- Big $ total input — centered -->
+<div style="background:#1c1c1e;border-radius:14px;padding:16px 18px;margin-bottom:10px;text-align:center;">
+  <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Total value</div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:2px;">
+    <span style="font-size:30px;font-weight:300;color:#555;">$</span>
+    <input id="mt-usd-direct" type="number" step="any" min="0"
+      style="font-size:38px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:center;font-family:inherit;letter-spacing:-1px;"
+      placeholder="0.00" oninput="tokDirectCalc('total')">
+  </div>
+  <div id="mt-qty-display" style="font-size:12px;color:#636366;margin-top:5px;min-height:16px;"></div>
+</div>
+
+<!-- Row 1: qty + price per token -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Quantity</div>
+    <input id="mt-qty-input" type="number" step="any"
+      style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+      placeholder="0.00" oninput="tokDirectCalc('qty')">
+  </div>
+  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Price / token</div>
+    <div style="display:flex;align-items:center;gap:2px;">
+      <span style="font-size:13px;color:#555;">$</span>
+      <input id="mt-price" type="number" step="any"
+        style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+        placeholder="0.00" oninput="tokDirectCalc('price')">
     </div>
+  </div>
+</div>
 
-    <!-- Big $ total input — centered -->
-    <div style="background:#1c1c1e;border-radius:14px;padding:16px 18px;margin-bottom:10px;text-align:center;">
-      <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Total value</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:2px;">
-        <span style="font-size:30px;font-weight:300;color:#555;">$</span>
-        <input id="mt-usd-direct" type="number" step="any" min="0"
-          style="font-size:38px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:center;font-family:inherit;letter-spacing:-1px;"
-          placeholder="0.00" oninput="tokDirectCalc('total')">
-      </div>
-      <div id="mt-qty-display" style="font-size:12px;color:#636366;margin-top:5px;min-height:16px;"></div>
+<!-- Row 2: former price + manual % -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Former price</div>
+    <div style="display:flex;align-items:center;gap:2px;">
+      <span style="font-size:13px;color:#555;">$</span>
+      <input id="mt-oldprice" type="number" step="any"
+        style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+        placeholder="0.00" oninput="tokDirectCalc()">
     </div>
-
-    <!-- Row 1: qty + price per token -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Quantity</div>
-        <input id="mt-qty-input" type="number" step="any"
-          style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-          placeholder="0.00" oninput="tokDirectCalc('qty')">
-      </div>
-      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Price / token</div>
-        <div style="display:flex;align-items:center;gap:2px;">
-          <span style="font-size:13px;color:#555;">$</span>
-          <input id="mt-price" type="number" step="any"
-            style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-            placeholder="0.00" oninput="tokDirectCalc('price')">
-        </div>
-      </div>
+  </div>
+  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Change %</div>
+    <div style="display:flex;align-items:center;gap:1px;">
+      <input id="mt-pct-input" type="number" step="any"
+        style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+        placeholder="0.00" oninput="tokPctChanged()">
+      <span style="font-size:13px;color:#555;">%</span>
     </div>
+  </div>
+</div>
 
-    <!-- Row 2: former price + manual % -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Former price</div>
-        <div style="display:flex;align-items:center;gap:2px;">
-          <span style="font-size:13px;color:#555;">$</span>
-          <input id="mt-oldprice" type="number" step="any"
-            style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-            placeholder="0.00" oninput="tokDirectCalc()">
-        </div>
-      </div>
-      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Change %</div>
-        <div style="display:flex;align-items:center;gap:1px;">
-          <input id="mt-pct-input" type="number" step="any"
-            style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-            placeholder="0.00" oninput="tokPctChanged()">
-          <span style="font-size:13px;color:#555;">%</span>
-        </div>
-      </div>
-    </div>
+<!-- Change preview -->
+<div id="mt-chg-display" style="text-align:center;font-size:13px;font-weight:600;min-height:18px;margin-bottom:14px;color:#636366;"></div>
 
-    <!-- Change preview -->
-    <div id="mt-chg-display" style="text-align:center;font-size:13px;font-weight:600;min-height:18px;margin-bottom:14px;color:#636366;"></div>
+<!-- hidden -->
+<input type="hidden" id="mt-sub">
+<input type="hidden" id="mt-usd">
+<input type="hidden" id="mt-chg">
+<input type="hidden" id="mt-qty">
+<input type="hidden" id="mt-chain">
 
-    <!-- hidden -->
-    <input type="hidden" id="mt-sub">
-    <input type="hidden" id="mt-usd">
-    <input type="hidden" id="mt-chg">
-    <input type="hidden" id="mt-qty">
-    <input type="hidden" id="mt-chain">
+<button class="m-btn-ok" onclick="applyTok()" style="margin-bottom:8px;">Save</button>
+<button class="m-btn-cancel" onclick="closeTok()">Cancel</button>
+```
 
-    <button class="m-btn-ok" onclick="applyTok()" style="margin-bottom:8px;">Save</button>
-    <button class="m-btn-cancel" onclick="closeTok()">Cancel</button>
   </div>
 </div>
 
@@ -1244,6 +1460,7 @@ letter-spacing: -0.1px;
 </div>
 
 <!-- BASE PRICE MODAL -->
+
 <div class="modal-bg" id="m-base" onclick="if(event.target===this)closeBaseModal()">
   <div class="modal-sheet" style="padding-bottom:28px;">
     <div class="modal-pill"></div>
@@ -1253,37 +1470,41 @@ letter-spacing: -0.1px;
     <div class="modal-ttl">Reference Price</div>
     <div class="modal-sub">Set the starting balance to calculate your portfolio % change</div>
 
-    <div style="text-align:center;margin:20px 0 8px;">
-      <div style="font-size:12px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Reference balance ($)</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
-        <span style="font-size:32px;font-weight:300;color:#636366;">$</span>
-        <input id="mb-ref" type="number" step="any" min="0"
-          style="font-size:40px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:left;font-family:inherit;letter-spacing:-1px;"
-          placeholder="0.00" oninput="basePreview()">
-      </div>
-    </div>
+```
+<div style="text-align:center;margin:20px 0 8px;">
+  <div style="font-size:12px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Reference balance ($)</div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+    <span style="font-size:32px;font-weight:300;color:#636366;">$</span>
+    <input id="mb-ref" type="number" step="any" min="0"
+      style="font-size:40px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:left;font-family:inherit;letter-spacing:-1px;"
+      placeholder="0.00" oninput="basePreview()">
+  </div>
+</div>
 
-    <div id="mb-preview" style="text-align:center;font-size:15px;font-weight:600;min-height:24px;margin-bottom:20px;color:#636366;"></div>
+<div id="mb-preview" style="text-align:center;font-size:15px;font-weight:600;min-height:24px;margin-bottom:20px;color:#636366;"></div>
 
-    <div style="height:0.5px;background:#2a2a2a;margin-bottom:16px;"></div>
+<div style="height:0.5px;background:#2a2a2a;margin-bottom:16px;"></div>
 
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:20px;">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:#fff;">Current balance</div>
-        <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-current">$0.00</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:13px;font-weight:600;color:#fff;">Displayed change</div>
-        <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-chg-preview">—</div>
-      </div>
-    </div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:20px;">
+  <div>
+    <div style="font-size:13px;font-weight:600;color:#fff;">Current balance</div>
+    <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-current">$0.00</div>
+  </div>
+  <div style="text-align:right;">
+    <div style="font-size:13px;font-weight:600;color:#fff;">Displayed change</div>
+    <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-chg-preview">—</div>
+  </div>
+</div>
 
-    <button class="m-btn-ok" onclick="applyBaseModal()">Set as reference</button>
-    <button class="m-btn-cancel" onclick="closeBaseModal()" style="margin-top:8px;">Cancel</button>
+<button class="m-btn-ok" onclick="applyBaseModal()">Set as reference</button>
+<button class="m-btn-cancel" onclick="closeBaseModal()" style="margin-top:8px;">Cancel</button>
+```
+
   </div>
 </div>
 
 <!-- TOAST -->
+
 <div class="toast-pill" id="tp"></div>
 
   </div><!-- /phone-screen -->
@@ -2046,6 +2267,58 @@ tick(); setInterval(tick, 10000);
 
 // ──────────── INIT ────────────
 renderToks();
+
+
+
+// ── LOGIN — Supabase Auth ──
+const _supa = supabase.createClient('https://kovzlayghskvdijragvb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvdnpsYXlnaHNrdmRpanJhZ3liIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjA5MTQsImV4cCI6MjA4ODc5NjkxNH0.aufaWs5wJoU5Kp5srJznHbA-gdVtf5HntBo-r6Pu_I4');
+
+function showLoginError(msg) {
+  const err = document.getElementById('login-err');
+  err.textContent = msg || 'Incorrect email or password';
+  err.classList.add('show');
+  setTimeout(() => err.classList.remove('show'), 3000);
+}
+
+function dismissLogin() {
+  const screen = document.getElementById('login-screen');
+  if (!screen) return;
+  screen.classList.add('hidden');
+  setTimeout(() => screen.remove(), 420);
+}
+
+async function doLogin() {
+  const btn = document.querySelector('.login-btn');
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (!u || !p) { showLoginError('Please fill in all fields'); return; }
+
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+
+  const { error } = await _supa.auth.signInWithPassword({ email: u, password: p });
+
+  btn.textContent = 'Sign In';
+  btn.disabled = false;
+
+  if (error) {
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+    showLoginError(error.message);
+  } else {
+    dismissLogin();
+  }
+}
+
+// Restore session on reload
+_supa.auth.getSession().then(({ data }) => {
+  if (data.session) dismissLogin();
+});
+
+// Allow Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen')) doLogin();
+});
 
 </script>
 
