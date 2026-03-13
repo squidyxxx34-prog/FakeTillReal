@@ -325,38 +325,38 @@ box-shadow: none;
 }
 /* ── iSPINNER — authentic iOS activity indicator ── */
 .ispinner {
-position: relative;
-width: 28px;
-height: 28px;
-display: block;
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: block;
 }
 .ispinner-large {
-width: 40px;
-height: 40px;
+  width: 40px;
+  height: 40px;
 }
 .ispinner-blade {
-position: absolute;
-left: 44.5%;
-top: 37%;
-width: 10%;
-height: 26%;
-border-radius: 50%/20%;
-background-color: transparent;
-opacity: 0;
+  position: absolute;
+  left: 44.5%;
+  top: 37%;
+  width: 10%;
+  height: 26%;
+  border-radius: 50%/20%;
+  background-color: transparent;
+  opacity: 0;
 }
 .ispinner-large .ispinner-blade {
-width: 7%;
-height: 22%;
-left: 46.5%;
-top: 38%;
+  width: 7%;
+  height: 22%;
+  left: 46.5%;
+  top: 38%;
 }
 /* Release spin — smooth comet tail, all blades always visible */
 .ispinner.spinning .ispinner-blade {
-animation: ispinner-release 1.2s linear infinite;
+  animation: ispinner-release 1.2s linear infinite;
 }
 @keyframes ispinner-release {
-0%   { opacity: 1; }
-100% { opacity: 0.12; }
+  0%   { opacity: 1; }
+  100% { opacity: 0.12; }
 }
 .ispinner-blade:nth-child(1) { transform: rotate(0deg)   translateY(-120%); }
 .ispinner-blade:nth-child(2) { transform: rotate(45deg)  translateY(-120%); }
@@ -376,8 +376,8 @@ animation: ispinner-release 1.2s linear infinite;
 .ispinner.spinning .ispinner-blade:nth-child(8) { animation-delay: -0.15s; }
 .ispinner.gray .ispinner-blade { background-color: #8e8e93; }
 @keyframes ispinner-fade {
-0%   { opacity: 1; }
-100% { opacity: 0; }
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* elastic content push — controlled entirely by JS */
@@ -402,13 +402,10 @@ cursor: pointer;
 .avatar-ring {
 width: 44px; height: 44px;
 border-radius: 50%;
-background: linear-gradient(135deg, #2ecc71 0%, #27ae60 50%, #1e8449 100%);
+background: #1c1c1e;
 display: flex; align-items: center; justify-content: center;
-font-size: 22px;
-line-height: 1;
-user-select: none;
+overflow: hidden;
 flex-shrink: 0;
-box-shadow: 0 2px 8px rgba(46,204,113,0.25);
 }
 .wallet-names { display: flex; flex-direction: column; gap: 0px; }
 .wallet-handle {
@@ -503,9 +500,9 @@ background: #2c2c2f;
 animation: ios-btn-press 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes ios-btn-press {
-0%   { transform: scale(1); }
-30%  { transform: scale(0.92); }
-100% { transform: scale(1); }
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
 }
 .act-ico {
 width: 24px; height: 24px;
@@ -635,9 +632,9 @@ justify-content: center;
 .chain-badge {
 position: absolute;
 bottom: -2px;
-right: -3px;
-width: 22px;
-height: 22px;
+right: -1px;
+width: 20px;
+height: 18px;
 border-radius: 6px;
 overflow: hidden;
 background: transparent;
@@ -723,9 +720,9 @@ will-change: transform;
 animation: ios-nav-tap 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes ios-nav-tap {
-0%   { transform: scale(1); opacity: 1; }
-20%  { transform: scale(0.88); opacity: 0.5; }
-100% { transform: scale(1); opacity: 1; }
+  0%   { transform: scale(1); opacity: 1; }
+  20%  { transform: scale(0.88); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
 }
 .nav-wrap {
 display: flex;
@@ -764,15 +761,17 @@ background: #9b8fff;
 .manage-tokens-btn {
 display: flex;
 align-items: center;
-justify-content: flex-start;
+justify-content: center;
+width: 100%;
 gap: 10px;
 padding: 20px 20px 32px;
 cursor: pointer;
-color: #8e8e93;
+color: #aeaeb2;
 font-size: 15px;
 font-weight: 400;
 letter-spacing: -0.1px;
 transition: opacity 0.15s;
+box-sizing: border-box;
 }
 .manage-tokens-btn:active { opacity: 0.5; }
 
@@ -840,12 +839,12 @@ transform-origin: bottom center;
 animation: su-dismiss 0.35s cubic-bezier(0.32,0.72,0,1) forwards;
 }
 @keyframes su {
-0%   { transform: translateY(110%); }
-100% { transform: translateY(0); }
+  0%   { transform: translateY(110%); }
+  100% { transform: translateY(0); }
 }
 @keyframes su-dismiss {
-0%   { transform: translateY(0); opacity: 1; }
-100% { transform: translateY(110%); opacity: 0; }
+  0%   { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(110%); opacity: 0; }
 }
 .modal-pill {
 width: 36px; height: 4px;
@@ -937,106 +936,106 @@ z-index: 800;
 opacity: 0;
 pointer-events: none;
 transition: opacity 0.22s cubic-bezier(0.34,1.56,0.64,1),
-transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+            transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
 letter-spacing: -0.1px;
 }
 .toast-pill.show {
-opacity: 1;
-transform: translateX(-50%) translateY(0) scale(1);
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 .toast-pill.hiding {
-opacity: 0;
-transform: translateX(-50%) translateY(-6px) scale(0.92);
-transition: opacity 0.18s ease, transform 0.2s ease;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px) scale(0.92);
+  transition: opacity 0.18s ease, transform 0.2s ease;
 }
 
 /* ── LOGIN SCREEN ── */
 #login-screen {
-position: fixed;
-inset: 0;
-background: #111111;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-z-index: 99999;
-padding: env(safe-area-inset-top) 32px env(safe-area-inset-bottom);
-gap: 0;
-transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
+  position: fixed;
+  inset: 0;
+  background: #111111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: env(safe-area-inset-top) 32px env(safe-area-inset-bottom);
+  gap: 0;
+  transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
 }
 #login-screen.hidden {
-opacity: 0;
-transform: translateY(-24px);
-pointer-events: none;
+  opacity: 0;
+  transform: translateY(-24px);
+  pointer-events: none;
 }
 .login-logo {
-font-size: 48px;
-margin-bottom: 12px;
-filter: drop-shadow(0 0 24px rgba(155,143,255,0.4));
+  font-size: 48px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 24px rgba(155,143,255,0.4));
 }
 .login-title {
-font-size: 28px;
-font-weight: 700;
-color: #fff;
-letter-spacing: -0.5px;
-margin-bottom: 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
 }
 .login-sub {
-font-size: 14px;
-color: rgba(255,255,255,0.35);
-margin-bottom: 48px;
-letter-spacing: 0.2px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 48px;
+  letter-spacing: 0.2px;
 }
 .login-field {
-width: 100%;
-max-width: 320px;
-margin-bottom: 14px;
-position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 14px;
+  position: relative;
 }
 .login-field input {
-width: 100%;
-background: rgba(255,255,255,0.06);
-border: 1px solid rgba(255,255,255,0.09);
-border-radius: 14px;
-padding: 16px 18px;
-color: #fff;
-font-size: 16px;
-font-family: inherit;
-outline: none;
-box-sizing: border-box;
-transition: border-color 0.2s, background 0.2s;
--webkit-appearance: none;
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: #fff;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
 }
 .login-field input::placeholder { color: rgba(255,255,255,0.25); }
 .login-field input:focus {
-border-color: rgba(155,143,255,0.5);
-background: rgba(155,143,255,0.07);
+  border-color: rgba(155,143,255,0.5);
+  background: rgba(155,143,255,0.07);
 }
 .login-btn {
-width: 100%;
-max-width: 320px;
-background: #9b8fff;
-color: #fff;
-border: none;
-border-radius: 14px;
-padding: 17px;
-font-size: 16px;
-font-weight: 600;
-font-family: inherit;
-margin-top: 8px;
-cursor: pointer;
-transition: opacity 0.15s, transform 0.15s;
-letter-spacing: 0.1px;
+  width: 100%;
+  max-width: 320px;
+  background: #9b8fff;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 17px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  letter-spacing: 0.1px;
 }
 .login-btn:active { opacity: 0.8; transform: scale(0.98); }
 .login-error {
-color: #ff6b6b;
-font-size: 13px;
-margin-top: 12px;
-min-height: 18px;
-text-align: center;
-opacity: 0;
-transition: opacity 0.2s;
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-top: 12px;
+  min-height: 18px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 .login-error.show { opacity: 1; }
 
@@ -1046,7 +1045,6 @@ transition: opacity 0.2s;
 <body>
 
 <!-- LOGIN SCREEN -->
-
 <div id="login-screen">
   <div class="login-logo">🐸</div>
   <div class="login-title">FakeTillReal</div>
@@ -1062,6 +1060,7 @@ transition: opacity 0.2s;
   </form>
   <div class="login-error" id="login-err">Incorrect username or password</div>
 </div>
+
 
 <div class="phone-shell">
   <div class="phone-screen">
@@ -1089,7 +1088,6 @@ transition: opacity 0.2s;
     </div>
 
 <!-- SCROLL -->
-
 <div class="scroll-area" id="scroll-area">
   <div class="ptr-indicator" id="ptr">
     <div class="ptr-track">
@@ -1109,10 +1107,9 @@ transition: opacity 0.2s;
 <div class="scroll-content-inner" id="scroll-inner">
 
   <!-- HEADER -->
-
   <div class="wallet-header">
     <div class="wallet-ident" onclick="openAccModal()">
-      <div class="avatar-ring" id="av">🐸</div>
+      <div class="avatar-ring" id="av"><img src="data:image/jpeg;base64,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" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;"></div>
       <div class="wallet-names">
         <span class="wallet-handle" id="w-handle">@squidyxxx</span>
         <span class="wallet-name" id="w-name">Account 1</span>
@@ -1131,7 +1128,6 @@ transition: opacity 0.2s;
   </div>
 
   <!-- BALANCE -->
-
   <div class="balance-block">
     <div class="balance-num" id="bal" onclick="openBuyModal()">$1.53</div>
     <div class="balance-change">
@@ -1141,8 +1137,27 @@ transition: opacity 0.2s;
   </div>
 
   <!-- ACTIONS -->
-
   <div class="action-grid">
+    <!-- Send: paper plane -->
+    <button class="act-btn" onclick="toast('Send')">
+      <div class="act-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9b8fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 2L11 13"/>
+          <path d="M22 2L15 22l-4-9-9-4 20-7z"/>
+        </svg>
+      </div>
+      <span class="act-lbl">Send</span>
+    </button>
+    <!-- Swap: two horizontal arrows -->
+    <button class="act-btn" onclick="toast('Swap')">
+      <div class="act-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9b8fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 17h14M5 17l4-4M5 17l4 4"/>
+          <path d="M19 7H5M19 7l-4-4M19 7l-4 4"/>
+        </svg>
+      </div>
+      <span class="act-lbl">Swap</span>
+    </button>
     <!-- Receive: QR code -->
     <button class="act-btn" onclick="toast('Address copied')">
       <div class="act-ico">
@@ -1161,30 +1176,10 @@ transition: opacity 0.2s;
       </div>
       <span class="act-lbl">Receive</span>
     </button>
-    <!-- Send: paper plane -->
-    <button class="act-btn" onclick="toast('Send')">
-      <div class="act-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9b8fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 2L11 13"/>
-          <path d="M22 2L15 22l-4-9-9-4 20-7z"/>
-        </svg>
-      </div>
-      <span class="act-lbl">Send</span>
-    </button>
-    <!-- Swap: two horizontal arrows like screenshot -->
-    <button class="act-btn" onclick="toast('Swap')">
-      <div class="act-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9b8fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 17h14M5 17l4-4M5 17l4 4"/>
-          <path d="M19 7H5M19 7l-4-4M19 7l-4 4"/>
-        </svg>
-      </div>
-      <span class="act-lbl">Swap</span>
-    </button>
     <!-- Buy: dollar sign -->
     <button class="act-btn" onclick="openBuyModal()">
       <div class="act-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9b8fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9b8fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="1" x2="12" y2="23"/>
           <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
         </svg>
@@ -1194,7 +1189,6 @@ transition: opacity 0.2s;
   </div>
 
   <!-- CASH CARD -->
-
   <div class="cash-card">
     <div class="cash-info">
       <div class="cash-label">Cash Balance</div>
@@ -1204,7 +1198,6 @@ transition: opacity 0.2s;
   </div>
 
   <!-- TOKENS -->
-
   <div class="tokens-head">
     <span class="tokens-head-lbl">Tokens</span>
     <span class="tokens-head-chev">›</span>
@@ -1222,86 +1215,81 @@ transition: opacity 0.2s;
 </div>
 
 <!-- ADD CRYPTO MODAL -->
-
 <div class="modal-bg" id="m-search" onclick="if(event.target===this)closeSearch()">
   <div class="modal-sheet" style="max-height:88%;overflow-y:auto;">
     <div class="modal-pill"></div>
     <div class="modal-ttl">🔍 Add a Token</div>
     <div class="modal-sub">Enter the token details to display in your wallet</div>
 
-```
-<!-- Image upload -->
-<div class="m-field">
-  <div class="m-lbl">Token Logo</div>
-  <div id="img-upload-area" onclick="document.getElementById('img-file-input').click()" style="
-    width:100%; height:80px; border-radius:14px;
-    border: 2px dashed #3a3a3c;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; gap:14px; transition: border-color 0.2s;
-    background:#2c2c2e;
-  ">
-    <div id="img-preview-wrap" style="display:none;">
-      <img id="img-preview" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
+    <!-- Image upload -->
+    <div class="m-field">
+      <div class="m-lbl">Token Logo</div>
+      <div id="img-upload-area" onclick="document.getElementById('img-file-input').click()" style="
+        width:100%; height:80px; border-radius:14px;
+        border: 2px dashed #3a3a3c;
+        display:flex; align-items:center; justify-content:center;
+        cursor:pointer; gap:14px; transition: border-color 0.2s;
+        background:#2c2c2e;
+      ">
+        <div id="img-preview-wrap" style="display:none;">
+          <img id="img-preview" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
+        </div>
+        <div id="img-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <span style="font-size:26px;">📷</span>
+          <span style="font-size:12px;color:#636366;font-weight:500;">Tap to choose an image</span>
+        </div>
+      </div>
+      <input type="file" id="img-file-input" accept="image/*" style="display:none;" onchange="previewImg(this)">
     </div>
-    <div id="img-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-      <span style="font-size:26px;">📷</span>
-      <span style="font-size:12px;color:#636366;font-weight:500;">Tap to choose an image</span>
+
+    <div class="m-field">
+      <div class="m-lbl">Token Name</div>
+      <input class="m-inp" id="sc-name" placeholder="e.g. Ethereum">
     </div>
-  </div>
-  <input type="file" id="img-file-input" accept="image/*" style="display:none;" onchange="previewImg(this)">
-</div>
+    <div class="m-field">
+      <div class="m-lbl">Ticker</div>
+      <input class="m-inp" id="sc-ticker" placeholder="e.g. ETH" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div>
+        <div class="m-lbl">Total value ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+        <input class="m-inp" id="sc-usd" type="number" placeholder="e.g. 1200.00" oninput="searchAutoCalc()">
+      </div>
+      <div>
+        <div class="m-lbl">Price / token ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+        <input class="m-inp" id="sc-price" type="number" placeholder="e.g. 3200.00" oninput="searchAutoCalc()">
+      </div>
+    </div>
+    <div class="m-field">
+      <div class="m-lbl">Amount Held <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+      <input class="m-inp" id="sc-qty" type="number" placeholder="e.g. 0.5" oninput="searchAutoCalc()">
+    </div>
+    <div class="m-field">
+      <div class="m-lbl">24h Change <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
+      <input class="m-inp" id="sc-chg" placeholder="e.g. +2.4% or -1.1%">
+    </div>
+    <div class="m-field">
+      <div class="m-lbl">Network Chain</div>
+      <select class="m-inp" id="sc-chain">
+        <option value="sol">🟣 Solana</option>
+        <option value="eth">🔵 Ethereum</option>
+        <option value="btc">🟠 Bitcoin</option>
+        <option value="base">🔵 Base</option>
+        <option value="matic">🟣 Polygon</option>
+        <option value="bnb">🟡 BNB Chain</option>
+        <option value="avax">🔴 Avalanche</option>
+        <option value="arb">🔵 Arbitrum</option>
+        <option value="op">🔴 Optimism</option>
+        <option value="none">⚪ Other / No badge</option>
+      </select>
+    </div>
 
-<div class="m-field">
-  <div class="m-lbl">Token Name</div>
-  <input class="m-inp" id="sc-name" placeholder="e.g. Ethereum">
-</div>
-<div class="m-field">
-  <div class="m-lbl">Ticker</div>
-  <input class="m-inp" id="sc-ticker" placeholder="e.g. ETH" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-  <div>
-    <div class="m-lbl">Total value ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-    <input class="m-inp" id="sc-usd" type="number" placeholder="e.g. 1200.00" oninput="searchAutoCalc()">
-  </div>
-  <div>
-    <div class="m-lbl">Price / token ($) <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-    <input class="m-inp" id="sc-price" type="number" placeholder="e.g. 3200.00" oninput="searchAutoCalc()">
-  </div>
-</div>
-<div class="m-field">
-  <div class="m-lbl">Amount Held <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-  <input class="m-inp" id="sc-qty" type="number" placeholder="e.g. 0.5" oninput="searchAutoCalc()">
-</div>
-<div class="m-field">
-  <div class="m-lbl">24h Change <span style="font-weight:400;opacity:0.5;text-transform:none;">optional</span></div>
-  <input class="m-inp" id="sc-chg" placeholder="e.g. +2.4% or -1.1%">
-</div>
-<div class="m-field">
-  <div class="m-lbl">Network Chain</div>
-  <select class="m-inp" id="sc-chain">
-    <option value="sol">🟣 Solana</option>
-    <option value="eth">🔵 Ethereum</option>
-    <option value="btc">🟠 Bitcoin</option>
-    <option value="base">🔵 Base</option>
-    <option value="matic">🟣 Polygon</option>
-    <option value="bnb">🟡 BNB Chain</option>
-    <option value="avax">🔴 Avalanche</option>
-    <option value="arb">🔵 Arbitrum</option>
-    <option value="op">🔴 Optimism</option>
-    <option value="none">⚪ Other / No badge</option>
-  </select>
-</div>
-
-<button class="m-btn-ok" onclick="applySearch()">➕ Add to Wallet</button>
-<button class="m-btn-cancel" onclick="closeSearch()">Cancel</button>
-```
-
+    <button class="m-btn-ok" onclick="applySearch()">➕ Add to Wallet</button>
+    <button class="m-btn-cancel" onclick="closeSearch()">Cancel</button>
   </div>
 </div>
 
 <!-- BUY/EDIT MODAL -->
-
 <div class="modal-bg" id="m-buy" onclick="if(event.target===this)closeBuy()">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
@@ -1338,7 +1326,6 @@ transition: opacity 0.2s;
 </div>
 
 <!-- ACCOUNT MODAL -->
-
 <div class="modal-bg" id="m-acc" onclick="if(event.target===this)closeAcc()">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
@@ -1362,88 +1349,84 @@ transition: opacity 0.2s;
 </div>
 
 <!-- TOKEN EDIT MODAL -->
-
 <div class="modal-bg" id="m-tok" onclick="if(event.target===this)closeTok()">
   <div class="modal-sheet" style="padding-bottom:28px;">
     <div class="modal-pill"></div>
 
-```
-<!-- Token header -->
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-  <div id="mt-logo-preview" style="width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;"></div>
-  <div>
-    <div id="mt-ttl" style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.3px;"></div>
-    <div id="mt-sub-title" style="font-size:12px;color:#636366;margin-top:1px;"></div>
-  </div>
-</div>
-
-<!-- Big $ total input — centered -->
-<div style="background:#1c1c1e;border-radius:14px;padding:16px 18px;margin-bottom:10px;text-align:center;">
-  <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Total value</div>
-  <div style="display:flex;align-items:center;justify-content:center;gap:2px;">
-    <span style="font-size:30px;font-weight:300;color:#555;">$</span>
-    <input id="mt-usd-direct" type="number" step="any" min="0"
-      style="font-size:38px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:center;font-family:inherit;letter-spacing:-1px;"
-      placeholder="0.00" oninput="tokDirectCalc('total')">
-  </div>
-  <div id="mt-qty-display" style="font-size:12px;color:#636366;margin-top:5px;min-height:16px;"></div>
-</div>
-
-<!-- Row 1: qty + price per token -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Quantity</div>
-    <input id="mt-qty-input" type="number" step="any"
-      style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-      placeholder="0.00" oninput="tokDirectCalc('qty')">
-  </div>
-  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Price / token</div>
-    <div style="display:flex;align-items:center;gap:2px;">
-      <span style="font-size:13px;color:#555;">$</span>
-      <input id="mt-price" type="number" step="any"
-        style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-        placeholder="0.00" oninput="tokDirectCalc('price')">
+    <!-- Token header -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+      <div id="mt-logo-preview" style="width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;"></div>
+      <div>
+        <div id="mt-ttl" style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.3px;"></div>
+        <div id="mt-sub-title" style="font-size:12px;color:#636366;margin-top:1px;"></div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- Row 2: former price + manual % -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Former price</div>
-    <div style="display:flex;align-items:center;gap:2px;">
-      <span style="font-size:13px;color:#555;">$</span>
-      <input id="mt-oldprice" type="number" step="any"
-        style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-        placeholder="0.00" oninput="tokDirectCalc()">
+    <!-- Big $ total input — centered -->
+    <div style="background:#1c1c1e;border-radius:14px;padding:16px 18px;margin-bottom:10px;text-align:center;">
+      <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Total value</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:2px;">
+        <span style="font-size:30px;font-weight:300;color:#555;">$</span>
+        <input id="mt-usd-direct" type="number" step="any" min="0"
+          style="font-size:38px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:center;font-family:inherit;letter-spacing:-1px;"
+          placeholder="0.00" oninput="tokDirectCalc('total')">
+      </div>
+      <div id="mt-qty-display" style="font-size:12px;color:#636366;margin-top:5px;min-height:16px;"></div>
     </div>
-  </div>
-  <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
-    <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Change %</div>
-    <div style="display:flex;align-items:center;gap:1px;">
-      <input id="mt-pct-input" type="number" step="any"
-        style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
-        placeholder="0.00" oninput="tokPctChanged()">
-      <span style="font-size:13px;color:#555;">%</span>
+
+    <!-- Row 1: qty + price per token -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Quantity</div>
+        <input id="mt-qty-input" type="number" step="any"
+          style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+          placeholder="0.00" oninput="tokDirectCalc('qty')">
+      </div>
+      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Price / token</div>
+        <div style="display:flex;align-items:center;gap:2px;">
+          <span style="font-size:13px;color:#555;">$</span>
+          <input id="mt-price" type="number" step="any"
+            style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+            placeholder="0.00" oninput="tokDirectCalc('price')">
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- Change preview -->
-<div id="mt-chg-display" style="text-align:center;font-size:13px;font-weight:600;min-height:18px;margin-bottom:14px;color:#636366;"></div>
+    <!-- Row 2: former price + manual % -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Former price</div>
+        <div style="display:flex;align-items:center;gap:2px;">
+          <span style="font-size:13px;color:#555;">$</span>
+          <input id="mt-oldprice" type="number" step="any"
+            style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+            placeholder="0.00" oninput="tokDirectCalc()">
+        </div>
+      </div>
+      <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;">
+        <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Change %</div>
+        <div style="display:flex;align-items:center;gap:1px;">
+          <input id="mt-pct-input" type="number" step="any"
+            style="font-size:16px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:100%;font-family:inherit;"
+            placeholder="0.00" oninput="tokPctChanged()">
+          <span style="font-size:13px;color:#555;">%</span>
+        </div>
+      </div>
+    </div>
 
-<!-- hidden -->
-<input type="hidden" id="mt-sub">
-<input type="hidden" id="mt-usd">
-<input type="hidden" id="mt-chg">
-<input type="hidden" id="mt-qty">
-<input type="hidden" id="mt-chain">
+    <!-- Change preview -->
+    <div id="mt-chg-display" style="text-align:center;font-size:13px;font-weight:600;min-height:18px;margin-bottom:14px;color:#636366;"></div>
 
-<button class="m-btn-ok" onclick="applyTok()" style="margin-bottom:8px;">Save</button>
-<button class="m-btn-cancel" onclick="closeTok()">Cancel</button>
-```
+    <!-- hidden -->
+    <input type="hidden" id="mt-sub">
+    <input type="hidden" id="mt-usd">
+    <input type="hidden" id="mt-chg">
+    <input type="hidden" id="mt-qty">
+    <input type="hidden" id="mt-chain">
 
+    <button class="m-btn-ok" onclick="applyTok()" style="margin-bottom:8px;">Save</button>
+    <button class="m-btn-cancel" onclick="closeTok()">Cancel</button>
   </div>
 </div>
 
@@ -1460,7 +1443,6 @@ transition: opacity 0.2s;
 </div>
 
 <!-- BASE PRICE MODAL -->
-
 <div class="modal-bg" id="m-base" onclick="if(event.target===this)closeBaseModal()">
   <div class="modal-sheet" style="padding-bottom:28px;">
     <div class="modal-pill"></div>
@@ -1470,41 +1452,47 @@ transition: opacity 0.2s;
     <div class="modal-ttl">Reference Price</div>
     <div class="modal-sub">Set the starting balance to calculate your portfolio % change</div>
 
-```
-<div style="text-align:center;margin:20px 0 8px;">
-  <div style="font-size:12px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Reference balance ($)</div>
-  <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
-    <span style="font-size:32px;font-weight:300;color:#636366;">$</span>
-    <input id="mb-ref" type="number" step="any" min="0"
-      style="font-size:40px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:left;font-family:inherit;letter-spacing:-1px;"
-      placeholder="0.00" oninput="basePreview()">
+    <div style="text-align:center;margin:20px 0 8px;">
+      <div style="font-size:12px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Reference balance ($)</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+        <span style="font-size:32px;font-weight:300;color:#636366;">$</span>
+        <input id="mb-ref" type="number" step="any" min="0"
+          style="font-size:40px;font-weight:600;color:#fff;background:transparent;border:none;outline:none;width:180px;text-align:left;font-family:inherit;letter-spacing:-1px;"
+          placeholder="0.00" oninput="basePreview()">
+      </div>
+    </div>
+
+    <div id="mb-preview" style="text-align:center;font-size:15px;font-weight:600;min-height:24px;margin-bottom:20px;color:#636366;"></div>
+
+    <div style="height:0.5px;background:#2a2a2a;margin-bottom:16px;"></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:20px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#fff;">Current balance</div>
+        <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-current">$0.00</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px;font-weight:600;color:#fff;">Displayed change</div>
+        <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-chg-preview">—</div>
+      </div>
+    </div>
+
+    <button class="m-btn-ok" onclick="applyBaseModal()">Set as reference</button>
+    <button class="m-btn-cancel" onclick="closeBaseModal()" style="margin-top:8px;">Cancel</button>
   </div>
 </div>
 
-<div id="mb-preview" style="text-align:center;font-size:15px;font-weight:600;min-height:24px;margin-bottom:20px;color:#636366;"></div>
-
-<div style="height:0.5px;background:#2a2a2a;margin-bottom:16px;"></div>
-
-<div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:20px;">
-  <div>
-    <div style="font-size:13px;font-weight:600;color:#fff;">Current balance</div>
-    <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-current">$0.00</div>
-  </div>
-  <div style="text-align:right;">
-    <div style="font-size:13px;font-weight:600;color:#fff;">Displayed change</div>
-    <div style="font-size:12px;color:#636366;margin-top:2px;" id="mb-chg-preview">—</div>
-  </div>
-</div>
-
-<button class="m-btn-ok" onclick="applyBaseModal()">Set as reference</button>
-<button class="m-btn-cancel" onclick="closeBaseModal()" style="margin-top:8px;">Cancel</button>
-```
-
+<!-- CHAIN PICKER -->
+<div class="modal-bg" id="m-chain" onclick="if(event.target===this)closeChainPicker()">
+  <div class="modal-sheet" style="padding-bottom:28px;">
+    <div class="modal-pill"></div>
+    <div class="modal-ttl" style="margin-bottom:16px;">Select Chain</div>
+    <div id="chain-picker-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+    <button class="m-btn-cancel" onclick="closeChainPicker()" style="margin-top:12px;">Cancel</button>
   </div>
 </div>
 
 <!-- TOAST -->
-
 <div class="toast-pill" id="tp"></div>
 
   </div><!-- /phone-screen -->
@@ -1602,7 +1590,7 @@ function renderToks() {
     <div class="token-row" onclick="openTokModal(${t._i})" ontouchstart="">
       <div class="logo-stack">
         <div class="tok-logo">${t.logo}</div>
-        ${t.noChain ? '' : '<div class="chain-badge">' + t.chain + '</div>'}
+        ${t.noChain ? '' : `<div class="chain-badge" onclick="event.stopPropagation();openChainPicker(${t._i})">${t.chain}</div>`}
       </div>
       <div class="tok-info">
         <div class="tok-name-row">
@@ -1617,14 +1605,14 @@ function renderToks() {
       </div>
     </div>
   `).join('');
-  const manageBtn = `<div class="manage-tokens-btn" onclick="openManageTokens()">
+  const manageBtn = `<div class="manage-tokens-btn" onclick="openManageTokens()" style="display:flex;align-items:center;justify-content:center;width:100%;gap:10px;padding:20px 20px 32px;cursor:pointer;box-sizing:border-box;">
     <svg viewBox="0 0 24 24" fill="none" stroke="#aeaeb2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
       <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
-      <circle cx="9" cy="6" r="2.5" fill="#111111" stroke="#8e8e93"/>
-      <circle cx="15" cy="12" r="2.5" fill="#111111" stroke="#8e8e93"/>
-      <circle cx="9" cy="18" r="2.5" fill="#111111" stroke="#8e8e93"/>
+      <circle cx="9" cy="6" r="2.5" fill="#111111" stroke="#aeaeb2"/>
+      <circle cx="15" cy="12" r="2.5" fill="#111111" stroke="#aeaeb2"/>
+      <circle cx="9" cy="18" r="2.5" fill="#111111" stroke="#aeaeb2"/>
     </svg>
-    <span>Manage token list</span>
+    <span style="color:#aeaeb2;font-size:15px;font-weight:400;">Manage token list</span>
   </div>`;
   document.getElementById('tok-list').innerHTML = tokHTML + manageBtn;
 }
@@ -2093,6 +2081,56 @@ function openBaseModal() {
   setTimeout(() => document.getElementById('mb-ref').select(), 120);
 }
 function closeBaseModal() { iosCloseModal('m-base'); }
+
+// ── CHAIN PICKER ──
+const CHAIN_OPTIONS = [
+  { key: 'sol',   label: 'Solana',    emoji: '🟣' },
+  { key: 'eth',   label: 'Ethereum',  emoji: '🔵' },
+  { key: 'btc',   label: 'Bitcoin',   emoji: '🟠' },
+  { key: 'matic', label: 'Polygon',   emoji: '🟣' },
+  { key: 'monad', label: 'Monad',     emoji: '🟤' },
+  { key: 'sui',   label: 'Sui',       emoji: '🔵' },
+  { key: 'hyper', label: 'Hyperliquid', emoji: '⚪' },
+  { key: 'bnb',   label: 'BNB Chain', emoji: '🟡' },
+  { key: 'avax',  label: 'Avalanche', emoji: '🔴' },
+  { key: 'arb',   label: 'Arbitrum',  emoji: '🔵' },
+  { key: 'op',    label: 'Optimism',  emoji: '🔴' },
+  { key: 'none',  label: 'No Chain',  emoji: '⬜' },
+];
+let _chainPickerIdx = null;
+
+function openChainPicker(idx) {
+  _chainPickerIdx = idx;
+  const t = S.tokens[idx];
+  const list = document.getElementById('chain-picker-list');
+  list.innerHTML = CHAIN_OPTIONS.map(c => `
+    <div onclick="selectChain('${c.key}')" style="
+      display:flex;align-items:center;gap:14px;
+      padding:13px 14px;border-radius:14px;cursor:pointer;
+      background:${(t.chainKey||'sol')===c.key ? '#2c2c2e' : 'transparent'};
+      transition:background 0.1s;
+    ">
+      <div style="width:32px;height:32px;border-radius:8px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+        <img src="${CHAIN_LOGOS[c.key]||''}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentNode.innerHTML='${c.emoji}'">
+      </div>
+      <span style="font-size:16px;font-weight:${(t.chainKey||'sol')===c.key?'600':'400'};color:${(t.chainKey||'sol')===c.key?'#fff':'#aeaeb2'};">${c.label}</span>
+      ${(t.chainKey||'sol')===c.key ? '<span style="margin-left:auto;color:#9b8fff;font-size:18px;">✓</span>' : ''}
+    </div>
+  `).join('');
+  document.getElementById('m-chain').classList.add('show');
+}
+
+function selectChain(key) {
+  if (_chainPickerIdx === null) return;
+  const t = S.tokens[_chainPickerIdx];
+  t.chainKey = key;
+  t.chain = chainLogo(key);
+  t.noChain = key === 'none';
+  closeChainPicker();
+  renderToks();
+}
+
+function closeChainPicker() { iosCloseModal('m-chain'); }
 function basePreview() {
   const ref = parseFloat(document.getElementById('mb-ref').value) || 0;
   const bal = parseFloat(computeBalance().replace(/,/g,'')) || 0;
@@ -2331,11 +2369,8 @@ function dismissLogin() {
   if (!screen) return;
   resetWalletValues();
   screen.classList.add('hidden');
-  // Disable pointer events immediately so touches pass through during fade
   screen.style.pointerEvents = 'none';
-  setTimeout(() => {
-    screen.remove();
-  }, 450);
+  setTimeout(() => { screen.remove(); }, 450);
 }
 
 function handleLoginSubmit(e) {
@@ -2345,6 +2380,7 @@ function handleLoginSubmit(e) {
   if (!u || !p) { showLoginError('Please fill in all fields'); return false; }
 
   if (USERS[u] && USERS[u] === p) {
+    try { localStorage.setItem('ftr_session', u); } catch(err) {}
     dismissLogin();
   } else {
     document.getElementById('login-pass').value = '';
@@ -2353,12 +2389,17 @@ function handleLoginSubmit(e) {
   }
   return false;
 }
-// Alias for any direct calls
 function doLogin() { handleLoginSubmit({ preventDefault: () => {} }); }
 
-// Session restore disabled — login always shown
-
-// Enter key handled by form onsubmit
+// Auto-login if session exists
+(function() {
+  try {
+    const saved = localStorage.getItem('ftr_session');
+    if (saved && USERS[saved]) {
+      dismissLogin();
+    }
+  } catch(err) {}
+})();
 
 </script>
 
