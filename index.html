@@ -131,6 +131,23 @@
   letter-spacing: 0.1px;
 }
 .login-btn:active { opacity: 0.8; transform: scale(0.98); }
+.login-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+.login-buy-btn {
+  width: 100%;
+  background: transparent;
+  color: #9b8fff;
+  border: 1.5px solid rgba(155,143,255,0.4);
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+  letter-spacing: 0.1px;
+}
+.login-buy-btn:active { background: rgba(155,143,255,0.1); }
+.login-buy-btn:disabled { opacity: 0.4; cursor: default; }
 .login-error {
   color: #ff6b6b;
   font-size: 13px;
@@ -288,6 +305,17 @@ background: rgba(255,255,255,0.4);
 border-radius: 0 1px 1px 0;
 }
 
+/* ── STICKY TOP BAR ── */
+.sticky-top {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 20;
+background: #111111;
+padding-top: env(safe-area-inset-top);
+}
+
 /* SCROLLABLE */
 .scroll-area {
 flex: 1;
@@ -302,9 +330,9 @@ padding-bottom: calc(58px + env(safe-area-inset-bottom, 34px) + 16px);
 .scroll-area::-webkit-scrollbar { display: none; }
 
 /* ── PULL TO REFRESH ── */
-/* Fixed-position spinner — stays put, content slides under it */
+/* Fixed-position spinner — always visible above sticky header */
 .ptr-indicator {
-position: absolute;
+position: fixed;
 top: 0;
 left: 50%;
 transform: translateX(-50%) translateY(0px);
@@ -312,7 +340,7 @@ width: 40px; height: 40px;
 display: flex; align-items: center; justify-content: center;
 pointer-events: none;
 opacity: 1;
-z-index: 10;
+z-index: 30;
 will-change: transform;
 }
 /* No pill/bubble — raw spinner only, like native iOS */
@@ -743,19 +771,12 @@ stroke-linejoin: round;
 .nav-it.active svg { stroke: #9b8fff; }
 .nav-it.active .ico-home { fill: #9b8fff; stroke: none; }
 .nav-it .nav-bar {
-position: absolute;
-top: -8px;
-left: 50%;
-transform: translateX(-50%);
-width: 36px;
-height: 2px;
-border-radius: 0 0 2px 2px;
-background: transparent;
-transition: background 0.2s;
+display: none;
 }
 .nav-it.active .nav-bar {
-background: #9b8fff;
-} stroke: none; }
+display: none;
+}
+
 
 /* ── MANAGE TOKEN LIST BUTTON ── */
 .manage-tokens-btn {
@@ -1028,6 +1049,23 @@ letter-spacing: -0.1px;
   letter-spacing: 0.1px;
 }
 .login-btn:active { opacity: 0.8; transform: scale(0.98); }
+.login-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+.login-buy-btn {
+  width: 100%;
+  background: transparent;
+  color: #9b8fff;
+  border: 1.5px solid rgba(155,143,255,0.4);
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+  letter-spacing: 0.1px;
+}
+.login-buy-btn:active { background: rgba(155,143,255,0.1); }
+.login-buy-btn:disabled { opacity: 0.4; cursor: default; }
 .login-error {
   color: #ff6b6b;
   font-size: 13px;
@@ -1056,9 +1094,13 @@ letter-spacing: -0.1px;
     <div class="login-field">
       <input id="login-pass" name="password" type="password" placeholder="Password" autocomplete="current-password"/>
     </div>
-    <button type="submit" class="login-btn">Sign In</button>
+    <button type="submit" class="login-btn" id="login-btn">Sign In</button>
   </form>
-  <div class="login-error" id="login-err">Incorrect username or password</div>
+  <div class="login-error" id="login-err"></div>
+  <div style="width:100%;max-width:320px;margin-top:20px;text-align:center;">
+    <div style="font-size:13px;color:#48484a;margin-bottom:14px;">Pas encore de compte ?</div>
+    <button class="login-buy-btn" id="buy-btn" onclick="handleBuy()">Obtenir l'accès à vie</button>
+  </div>
 </div>
 
 
@@ -1087,25 +1129,7 @@ letter-spacing: -0.1px;
       </div>
     </div>
 
-<!-- SCROLL -->
-<div class="scroll-area" id="scroll-area">
-  <div class="ptr-indicator" id="ptr">
-    <div class="ptr-track">
-      <!-- iSpinner — authentic iOS activity indicator -->
-      <div class="ispinner ispinner-large gray" id="ptr-spinner">
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-        <div class="ispinner-blade"></div>
-      </div>
-    </div>
-  </div>
-<div class="scroll-content-inner" id="scroll-inner">
-
+<div class="sticky-top" id="sticky-top">
   <!-- HEADER -->
   <div class="wallet-header">
     <div class="wallet-ident" onclick="openAccModal()">
@@ -1126,6 +1150,27 @@ letter-spacing: -0.1px;
       </div>
     </div>
   </div>
+
+  <!-- BALANCE in sticky (hidden, just for spacing reference - removed) -->
+</div><!-- /sticky-top -->
+<!-- SCROLL -->
+<div class="scroll-area" id="scroll-area">
+  <div class="ptr-indicator" id="ptr">
+    <div class="ptr-track">
+      <div class="ispinner ispinner-large gray" id="ptr-spinner">
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+        <div class="ispinner-blade"></div>
+      </div>
+    </div>
+  </div>
+
+<div class="scroll-content-inner" id="scroll-inner">
 
   <!-- BALANCE -->
   <div class="balance-block">
@@ -2253,11 +2298,9 @@ tick(); setInterval(tick, 10000);
 
   function resetSpinner() {
     spinner.classList.remove('spinning');
-    indicator.style.transform = 'translateX(-50%) translateY(0px)';
+    indicator.style.transform = 'translateX(-50%) translateY(-40px)';
     blades.forEach(b => { b.style.opacity = '0'; b.style.animationDelay = ''; });
     indicator.style.transition = 'none';
-
-
     headPct = 0;
     full    = false;
   }
@@ -2281,58 +2324,61 @@ tick(); setInterval(tick, 10000);
 
   // Kick off CSS spin animation starting exactly from headPct
   function startReleaseSpin() {
+    // Force reflow so animation restarts cleanly even if called rapidly
+    spinner.classList.remove('spinning');
+    blades.forEach(b => { b.style.animationDelay = ''; });
+    void spinner.offsetWidth; // trigger reflow
     blades.forEach((b, i) => {
-      b.style.opacity = ''; // let animation control it
-      // Blade i is at position i/n in the circle (clockwise)
-      // Head is at headPct. Distance of blade i behind head (clockwise):
+      b.style.opacity = '';
       const headIdx = (headPct * n) % n;
       const behind = ((headIdx - i + n * 4) % n) / n;
-      // delay: head blade starts at t=0 (most recent = delay 0)
-      // blades behind head are further in the past
       b.style.animationDelay = `${-behind * DURATION}s`;
     });
     spinner.classList.add('spinning');
-
   }
 
   function snapBack(cb) {
-    const ease = 'cubic-bezier(0.32,0.72,0,1)';
-    inner.style.transition      = `transform 0.45s ${ease}`;
+    const ease = 'cubic-bezier(0.25,1,0.5,1)';
+    inner.style.transition      = `transform 0.3s ${ease}`;
     inner.style.transform       = 'translateY(0px)';
-    indicator.style.transition  = `transform 0.45s ${ease}`;
-    indicator.style.transform   = 'translateX(-50%) translateY(-56px)';
+    indicator.style.transition  = `transform 0.3s ${ease}`;
+    indicator.style.transform   = 'translateX(-50%) translateY(-40px)';
+    setTimeout(cb, 300);
+  }
 
-    setTimeout(cb, 450);
+  let snapTimer = null;
+
+  function abortAll() {
+    if (snapTimer) { clearTimeout(snapTimer); snapTimer = null; }
+    pulling = false;
+    refreshing = false;
+    inner.style.transition     = 'none';
+    inner.style.transform      = 'translateY(0px)';
+    indicator.style.transition = 'none';
+    resetSpinner();
   }
 
   scroller.addEventListener('touchstart', e => {
-    if (refreshing) return;
     if (scroller.scrollTop > 2) return;
-    startY = e.touches[0].clientY;
+    abortAll();
+    startY  = e.touches[0].clientY;
     pulling = true;
-    inner.style.transition      = 'none';
-    indicator.style.transition = 'none';
-    resetSpinner();
   }, { passive: true });
 
   scroller.addEventListener('touchmove', e => {
-    if (!pulling || refreshing) return;
+    if (!pulling) return;
     const dy = e.touches[0].clientY - startY;
-    if (dy <= 0) { pulling = false; return; }
+    if (dy <= 0) return;
 
-    const rubber = dy * (1 / (1 + dy * 0.030));
+    const rubber = dy * (1 / (1 + dy * 0.010));
     inner.style.transform = `translateY(${rubber}px)`;
-    // Spinner slides in from top: starts at -60px, reaches TARGET_Y at full pull
-    const spinY = dy / 25;
+    const spinY = -40 + rubber * 0.9;
     indicator.style.transform = `translateX(-50%) translateY(${spinY}px)`;
 
-    // Spinner freezes at pct=1 but page keeps dragging
     const rawPct = Math.min(dy / TRIGGER_AT, 1);
-    if (!full) {
-      headPct = rawPct;
-      showBlades(rawPct);
-      if (rawPct >= 1) full = true;
-    }
+    headPct = rawPct;
+    showBlades(rawPct);
+    if (!full && rawPct >= 1) full = true;
   }, { passive: true });
 
   scroller.addEventListener('touchcancel', () => {
@@ -2342,48 +2388,52 @@ tick(); setInterval(tick, 10000);
   });
 
   scroller.addEventListener('touchend', e => {
-    if (!pulling || refreshing) return;
+    if (!pulling) return;
     pulling = false;
     const dy = e.changedTouches[0].clientY - startY;
 
     if (full || dy >= TRIGGER_AT) {
       refreshing = true;
       startReleaseSpin();
-      const ease = 'cubic-bezier(0.32,0.72,0,1)';
-      inner.style.transition     = `transform 0.45s ${ease}`;
-      inner.style.transform      = 'translateY(20px)';
-      indicator.style.transition = `transform 0.45s ${ease}`;
-      indicator.style.transform  = `translateX(-50%) translateY(10px)`;
-      setTimeout(() => {
+      const ease = 'cubic-bezier(0.25,1,0.5,1)';
+      inner.style.transition     = `transform 0.55s ${ease}`;
+      inner.style.transform      = 'translateY(100px)';
+      indicator.style.transition = `transform 0.55s ${ease}`;
+      indicator.style.transform  = `translateX(-50%) translateY(20px)`;
+      snapTimer = setTimeout(() => {
+        snapTimer    = null;
+        refreshing   = false;
         spinner.classList.remove('spinning');
-        refreshing = false;
-        snapBack(() => {
-          resetSpinner();
-        });
+        snapBack(() => resetSpinner());
       }, 700);
     } else {
       snapBack(() => resetSpinner());
     }
   });
-})();
 
-// ──────────── INIT ────────────
+})();
 renderToks();
+
+// Pad scroll content to sit below sticky header only
+(function setPad() {
+  const st = document.getElementById('sticky-top');
+  const si = document.getElementById('scroll-inner');
+  const ptr = document.getElementById('ptr');
+  if (st && si && ptr) {
+    const h = st.offsetHeight;
+    si.style.paddingTop = h + 'px';
+    ptr.style.top = h + 'px';
+  } else setTimeout(setPad, 50);
+})();
 
 
 
 // ── LOGIN — local users (add more below) ──
-const USERS = {
-  'squidyxxx': 'password123',
-  // 'alice': 'alicepass',
-  // 'bob': 'bobpass',
-};
-
 function showLoginError(msg) {
   const err = document.getElementById('login-err');
-  err.textContent = msg || 'Incorrect username or password';
+  err.textContent = msg || 'Identifiants incorrects';
   err.classList.add('show');
-  setTimeout(() => err.classList.remove('show'), 3000);
+  setTimeout(() => err.classList.remove('show'), 3500);
 }
 
 function resetWalletValues() {
@@ -2400,14 +2450,12 @@ function resetWalletValues() {
     t.priceOld = null;
   });
   renderToks();
-  // Reset DOM directly
   const bal = document.getElementById('bal');
   const chgV = document.getElementById('chg-v');
   const chgP = document.getElementById('chg-p');
   if (bal)  bal.textContent  = '$0.00';
   if (chgV) { chgV.textContent = '+$0.00'; chgV.className = 'chg-val pos'; }
   if (chgP) { chgP.textContent = '+0.00%'; chgP.className = 'chg-pill pos'; }
-  // Reset cash card
   const cashEl = document.querySelector('.cash-val');
   if (cashEl) cashEl.textContent = '$0.00';
 }
@@ -2421,32 +2469,97 @@ function dismissLogin() {
   setTimeout(() => { screen.remove(); }, 450);
 }
 
-function handleLoginSubmit(e) {
+async function handleLoginSubmit(e) {
   if (e && e.preventDefault) e.preventDefault();
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
-  if (!u || !p) { showLoginError('Please fill in all fields'); return false; }
+  if (!u || !p) { showLoginError('Remplis tous les champs'); return false; }
 
-  if (USERS[u] && USERS[u] === p) {
-    try { localStorage.setItem('ftr_session', u); } catch(err) {}
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.textContent = 'Connexion…';
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      document.getElementById('login-pass').value = '';
+      document.getElementById('login-pass').focus();
+      showLoginError(data.error || 'Identifiants incorrects');
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+      return false;
+    }
+
+    // Sauvegarder le token
+    try {
+      localStorage.setItem('ftr_token', data.token);
+      localStorage.setItem('ftr_username', data.username);
+    } catch(err) {}
+
     dismissLogin();
-  } else {
-    document.getElementById('login-pass').value = '';
-    document.getElementById('login-pass').focus();
-    showLoginError('Incorrect username or password');
+  } catch(err) {
+    showLoginError('Erreur réseau. Réessaie.');
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
   }
   return false;
 }
+
 function doLogin() { handleLoginSubmit({ preventDefault: () => {} }); }
 
-// Auto-login if session exists
-(function() {
+async function handleBuy() {
+  const btn = document.getElementById('buy-btn');
+  btn.disabled = true;
+  btn.textContent = 'Redirection…';
   try {
-    const saved = localStorage.getItem('ftr_session');
-    if (saved && USERS[saved]) {
-      dismissLogin();
+    const res = await fetch('/api/create-checkout', { method: 'POST' });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showLoginError('Erreur lors de la redirection vers le paiement.');
+      btn.disabled = false;
+      btn.textContent = 'Obtenir l\'accès à vie';
     }
-  } catch(err) {}
+  } catch(err) {
+    showLoginError('Erreur réseau. Réessaie.');
+    btn.disabled = false;
+    btn.textContent = 'Obtenir l\'accès à vie';
+  }
+}
+
+// Auto-login si token valide
+(async function() {
+  try {
+    const token = localStorage.getItem('ftr_token');
+    if (!token) return;
+    const res = await fetch('/api/verify-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.valid) {
+        localStorage.setItem('ftr_username', data.username);
+        dismissLogin();
+      } else {
+        localStorage.removeItem('ftr_token');
+        localStorage.removeItem('ftr_username');
+      }
+    } else {
+      localStorage.removeItem('ftr_token');
+      localStorage.removeItem('ftr_username');
+    }
+  } catch(err) {
+    // Pas de réseau — on laisse le login s'afficher
+  }
 })();
 
 </script>
