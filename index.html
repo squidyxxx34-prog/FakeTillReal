@@ -64,7 +64,7 @@
   z-index: 99999;
   padding: env(safe-area-inset-top) 32px env(safe-area-inset-bottom);
   gap: 0;
-  transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
+  transition: opacity 0.25s cubic-bezier(0.32,0.72,0,1), transform 0.25s cubic-bezier(0.32,0.72,0,1);
 }
 #login-screen.hidden {
   opacity: 0;
@@ -371,7 +371,7 @@ box-shadow: none;
 .ispinner.spinning .ispinner-blade:nth-child(3) { animation-delay: -0.9s; }
 .ispinner.spinning .ispinner-blade:nth-child(4) { animation-delay: -0.75s; }
 .ispinner.spinning .ispinner-blade:nth-child(5) { animation-delay: -0.6s; }
-.ispinner.spinning .ispinner-blade:nth-child(6) { animation-delay: -0.45s; }
+.ispinner.spinning .ispinner-blade:nth-child(6) { animation-delay: -0.28s; }
 .ispinner.spinning .ispinner-blade:nth-child(7) { animation-delay: -0.3s; }
 .ispinner.spinning .ispinner-blade:nth-child(8) { animation-delay: -0.15s; }
 .ispinner.gray .ispinner-blade { background-color: #8e8e93; }
@@ -497,7 +497,7 @@ will-change: transform;
 .act-btn:hover { background: #252528; }
 .act-btn:active {
 background: #2c2c2f;
-animation: ios-btn-press 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+animation: ios-btn-press 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes ios-btn-press {
   0%   { transform: scale(1); }
@@ -567,7 +567,7 @@ will-change: transform;
 .cash-add-btn:hover { background: #b89cf7; }
 .cash-add-btn:active {
 background: #a87ef0;
-animation: ios-btn-press 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+animation: ios-btn-press 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 
 /* ── TOKENS SECTION ── */
@@ -717,7 +717,7 @@ cursor: pointer;
 will-change: transform;
 }
 .nav-it:active {
-animation: ios-nav-tap 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+animation: ios-nav-tap 0.22s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 @keyframes ios-nav-tap {
   0%   { transform: scale(1); opacity: 1; }
@@ -817,7 +817,7 @@ overflow: hidden;
 align-items: flex-end;
 justify-content: center;
 backdrop-filter: blur(4px);
-transition: background 0.35s ease, backdrop-filter 0.35s ease;
+transition: background 0.22s ease, backdrop-filter 0.22s ease;
 }
 .modal-bg.show { display: flex; }
 .modal-bg.dismissing {
@@ -836,7 +836,7 @@ will-change: transform;
 transform-origin: bottom center;
 }
 .modal-bg.dismissing .modal-sheet {
-animation: su-dismiss 0.35s cubic-bezier(0.32,0.72,0,1) forwards;
+animation: su-dismiss 0.22s cubic-bezier(0.32,0.72,0,1) forwards;
 }
 @keyframes su {
   0%   { transform: translateY(110%); }
@@ -905,7 +905,7 @@ will-change: transform;
 }
 .m-btn-ok:hover { background: #6d4ef0; }
 .m-btn-ok:active {
-animation: ios-btn-press 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+animation: ios-btn-press 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards;
 }
 .m-btn-cancel {
 width: 100%; padding: 13px;
@@ -935,7 +935,7 @@ white-space: nowrap;
 z-index: 800;
 opacity: 0;
 pointer-events: none;
-transition: opacity 0.22s cubic-bezier(0.34,1.56,0.64,1),
+transition: opacity 0.14s cubic-bezier(0.34,1.56,0.64,1),
             transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
 letter-spacing: -0.1px;
 }
@@ -946,7 +946,7 @@ letter-spacing: -0.1px;
 .toast-pill.hiding {
   opacity: 0;
   transform: translateX(-50%) translateY(-6px) scale(0.92);
-  transition: opacity 0.18s ease, transform 0.2s ease;
+  transition: opacity 0.12s ease, transform 0.14s ease;
 }
 
 /* ── LOGIN SCREEN ── */
@@ -961,7 +961,7 @@ letter-spacing: -0.1px;
   z-index: 99999;
   padding: env(safe-area-inset-top) 32px env(safe-area-inset-bottom);
   gap: 0;
-  transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
+  transition: opacity 0.25s cubic-bezier(0.32,0.72,0,1), transform 0.25s cubic-bezier(0.32,0.72,0,1);
 }
 #login-screen.hidden {
   opacity: 0;
@@ -1415,6 +1415,12 @@ letter-spacing: -0.1px;
       </div>
     </div>
 
+    <!-- Chain selector -->
+    <div style="background:#1c1c1e;border-radius:12px;padding:12px 14px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Chain</div>
+      <div id="mt-chain-picker" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+
     <!-- Change preview -->
     <div id="mt-chg-display" style="text-align:center;font-size:13px;font-weight:600;min-height:18px;margin-bottom:14px;color:#636366;"></div>
 
@@ -1590,7 +1596,7 @@ function renderToks() {
     <div class="token-row" onclick="openTokModal(${t._i})" ontouchstart="">
       <div class="logo-stack">
         <div class="tok-logo">${t.logo}</div>
-        ${t.noChain ? '' : `<div class="chain-badge" onclick="event.stopPropagation();openChainPicker(${t._i})">${t.chain}</div>`}
+        ${t.noChain ? '' : `<div class="chain-badge">${t.chain}</div>`}
       </div>
       <div class="tok-info">
         <div class="tok-name-row">
@@ -1632,7 +1638,7 @@ function iosCloseModal(id, cb) {
       setTimeout(() => {
         bg.classList.remove('show', 'dismissing');
         if (cb) cb();
-      }, 350);
+      }, 210);
     });
   });
 }
@@ -1698,6 +1704,7 @@ function applyAcc() {
 
 function openTokModal(i) {
   curTok = i;
+  _curTokChainKey = undefined;
   const t = S.tokens[i];
   document.getElementById('mt-ttl').textContent = t.name;
   document.getElementById('mt-sub-title').textContent = t.sub || '';
@@ -1719,6 +1726,21 @@ function openTokModal(i) {
   chgEl.style.color = t.up === true ? '#30d158' : t.up === false ? '#ff453a' : '#636366';
   const logoWrap = document.getElementById('mt-logo-preview');
   if (logoWrap) logoWrap.innerHTML = t.logo;
+  // Populate chain picker
+  const chainPicker = document.getElementById('mt-chain-picker');
+  if (chainPicker) {
+    chainPicker.innerHTML = CHAIN_OPTIONS.map(c => `
+      <div onclick="selectTokChain('${c.key}')" id="mt-chain-opt-${c.key}" style="
+        display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:10px;cursor:pointer;
+        background:${(t.chainKey||'sol')===c.key ? '#2c2c2e' : '#1c1c1e'};
+        border:1.5px solid ${(t.chainKey||'sol')===c.key ? '#9b8fff' : 'transparent'};
+        transition:all 0.15s;
+      ">
+        <img src="${CHAIN_LOGOS[c.key]||''}" style="width:18px;height:18px;border-radius:4px;object-fit:cover;" onerror="this.style.display='none'">
+        <span style="font-size:13px;font-weight:${(t.chainKey||'sol')===c.key?'600':'400'};color:${(t.chainKey||'sol')===c.key?'#fff':'#8e8e93'};">${c.label}</span>
+      </div>
+    `).join('');
+  }
   document.getElementById('m-tok').classList.add('show');
   setTimeout(() => document.getElementById('mt-usd-direct').select(), 120);
 }
@@ -1801,9 +1823,30 @@ function applyTok() {
   }
   t.chg = document.getElementById('mt-chg').value;
   t.up  = t.chg.trim().startsWith('+') ? true : t.chg.trim().startsWith('-') ? false : null;
+  // Save chain if changed in picker
+  if (_curTokChainKey !== undefined) {
+    t.chainKey = _curTokChainKey;
+    t.chain    = chainLogo(_curTokChainKey);
+    t.noChain  = _curTokChainKey === 'none';
+    _curTokChainKey = undefined;
+  }
   renderToks();
   closeTok();
   toast('✅ ' + t.name + ' updated');
+}
+
+let _curTokChainKey;
+function selectTokChain(key) {
+  _curTokChainKey = key;
+  // Update UI highlight
+  CHAIN_OPTIONS.forEach(c => {
+    const el = document.getElementById('mt-chain-opt-' + c.key);
+    if (!el) return;
+    el.style.background = c.key === key ? '#2c2c2e' : '#1c1c1e';
+    el.style.border = `1.5px solid ${c.key === key ? '#9b8fff' : 'transparent'}`;
+    el.querySelector('span').style.fontWeight = c.key === key ? '600' : '400';
+    el.querySelector('span').style.color = c.key === key ? '#fff' : '#8e8e93';
+  });
 }
 
 // ──────────── SEARCH / ADD TOKEN ────────────
@@ -2202,7 +2245,7 @@ tick(); setInterval(tick, 10000);
 
   const blades     = Array.from(spinner.querySelectorAll('.ispinner-blade'));
   const n          = blades.length;
-  const TRIGGER_AT = 120; // px raw drag to complete full circle
+  const TRIGGER_AT = 200; // px raw drag to complete full circle
   const DURATION   = 1.2; // must match CSS animation-duration
 
   let startY = 0, pulling = false, refreshing = false, full = false;
@@ -2254,12 +2297,12 @@ tick(); setInterval(tick, 10000);
 
   function snapBack(cb) {
     const ease = 'cubic-bezier(0.32,0.72,0,1)';
-    inner.style.transition      = `transform 0.65s ${ease}`;
+    inner.style.transition      = `transform 0.45s ${ease}`;
     inner.style.transform       = 'translateY(0px)';
-    indicator.style.transition  = `transform 0.65s ${ease}`;
+    indicator.style.transition  = `transform 0.45s ${ease}`;
     indicator.style.transform   = 'translateX(-50%) translateY(-56px)';
 
-    setTimeout(cb, 650);
+    setTimeout(cb, 450);
   }
 
   scroller.addEventListener('touchstart', e => {
@@ -2277,10 +2320,10 @@ tick(); setInterval(tick, 10000);
     const dy = e.touches[0].clientY - startY;
     if (dy <= 0) { pulling = false; return; }
 
-    const rubber = dy * (1 / (1 + dy * 0.012));
+    const rubber = dy * (1 / (1 + dy * 0.030));
     inner.style.transform = `translateY(${rubber}px)`;
     // Spinner slides in from top: starts at -60px, reaches TARGET_Y at full pull
-    const spinY = dy / 16;
+    const spinY = dy / 25;
     indicator.style.transform = `translateX(-50%) translateY(${spinY}px)`;
 
     // Spinner freezes at pct=1 but page keeps dragging
@@ -2306,13 +2349,18 @@ tick(); setInterval(tick, 10000);
     if (full || dy >= TRIGGER_AT) {
       refreshing = true;
       startReleaseSpin();
+      const ease = 'cubic-bezier(0.32,0.72,0,1)';
+      inner.style.transition     = `transform 0.45s ${ease}`;
+      inner.style.transform      = 'translateY(20px)';
+      indicator.style.transition = `transform 0.45s ${ease}`;
+      indicator.style.transform  = `translateX(-50%) translateY(10px)`;
       setTimeout(() => {
         spinner.classList.remove('spinning');
+        refreshing = false;
         snapBack(() => {
           resetSpinner();
-          refreshing = false;
         });
-      }, 800);
+      }, 700);
     } else {
       snapBack(() => resetSpinner());
     }
