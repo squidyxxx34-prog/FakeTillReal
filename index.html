@@ -2202,7 +2202,7 @@ tick(); setInterval(tick, 10000);
 
   const blades     = Array.from(spinner.querySelectorAll('.ispinner-blade'));
   const n          = blades.length;
-  const TRIGGER_AT = 200; // px raw drag to complete full circle
+  const TRIGGER_AT = 120; // px raw drag to complete full circle
   const DURATION   = 1.2; // must match CSS animation-duration
 
   let startY = 0, pulling = false, refreshing = false, full = false;
@@ -2254,12 +2254,12 @@ tick(); setInterval(tick, 10000);
 
   function snapBack(cb) {
     const ease = 'cubic-bezier(0.32,0.72,0,1)';
-    inner.style.transition      = `transform 0.45s ${ease}`;
+    inner.style.transition      = `transform 0.65s ${ease}`;
     inner.style.transform       = 'translateY(0px)';
-    indicator.style.transition  = `transform 0.45s ${ease}`;
+    indicator.style.transition  = `transform 0.65s ${ease}`;
     indicator.style.transform   = 'translateX(-50%) translateY(-56px)';
 
-    setTimeout(cb, 450);
+    setTimeout(cb, 650);
   }
 
   scroller.addEventListener('touchstart', e => {
@@ -2277,10 +2277,10 @@ tick(); setInterval(tick, 10000);
     const dy = e.touches[0].clientY - startY;
     if (dy <= 0) { pulling = false; return; }
 
-    const rubber = dy * (1 / (1 + dy * 0.006));
+    const rubber = dy * (1 / (1 + dy * 0.012));
     inner.style.transform = `translateY(${rubber}px)`;
     // Spinner slides in from top: starts at -60px, reaches TARGET_Y at full pull
-    const spinY = dy / 25;
+    const spinY = dy / 16;
     indicator.style.transform = `translateX(-50%) translateY(${spinY}px)`;
 
     // Spinner freezes at pct=1 but page keeps dragging
@@ -2312,7 +2312,7 @@ tick(); setInterval(tick, 10000);
           resetSpinner();
           refreshing = false;
         });
-      }, 1400);
+      }, 800);
     } else {
       snapBack(() => resetSpinner());
     }
