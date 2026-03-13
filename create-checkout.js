@@ -6,7 +6,7 @@ const Stripe = require('stripe');
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = new Stripe(process.env.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);
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -16,10 +16,10 @@ module.exports = async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'FakeTillReal — Accès à vie',
-            description: 'Accès illimité et définitif à FakeTillReal',
+            name: 'FakeTillReal — Life access',
+            description: 'Infinite access to FakeTillReal',
           },
-          unit_amount: 999, // 9,99 € — à adapter
+          unit_amount: 1999, // 9,99 € — à adapter
         },
         quantity: 1,
       }],
