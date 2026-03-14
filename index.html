@@ -2469,47 +2469,26 @@ function dismissLogin() {
 
 async function handleLoginSubmit(e) {
   if (e && e.preventDefault) e.preventDefault();
+function handleLoginSubmit(e) {
+  if (e && e.preventDefault) e.preventDefault();
+
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
-  if (!u || !p) { showLoginError('Remplis tous les champs'); return false; }
 
-  const btn = document.getElementById('login-btn');
-  btn.disabled = true;
-  btn.textContent = 'Connexion…';
+  if (u === "squidyxxx" && p === "password123") {
 
-  try {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: u, password: p }),
-    });
-    const data = await res.json();
+    // cacher le login
+    const screen = document.getElementById('login-screen');
+    if (screen) screen.style.display = "none";
 
-    if (!res.ok) {
-      document.getElementById('login-pass').value = '';
-      document.getElementById('login-pass').focus();
-      showLoginError(data.error || 'Identifiants incorrects');
-      btn.disabled = false;
-      btn.textContent = 'Sign In';
-      return false;
-    }
+  } else {
 
-    // Sauvegarder le token
-    try {
-      localStorage.setItem('ftr_token', data.token);
-      localStorage.setItem('ftr_username', data.username);
-    } catch(err) {}
+    showLoginError("Identifiants incorrects");
 
-    dismissLogin();
-  } catch(err) {
-    showLoginError('Erreur réseau. Réessaie.');
-    btn.disabled = false;
-    btn.textContent = 'Sign In';
   }
+
   return false;
 }
-
-function doLogin() { handleLoginSubmit({ preventDefault: () => {} }); }
 
 async function handleBuy() {
   const btn = document.getElementById('buy-btn');
