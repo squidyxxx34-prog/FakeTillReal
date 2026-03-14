@@ -2490,27 +2490,6 @@ function handleLoginSubmit(e) {
   return false;
 }
 
-async function handleBuy() {
-  const btn = document.getElementById('buy-btn');
-  btn.disabled = true;
-  btn.textContent = 'Redirection…';
-  try {
-    const res = await fetch('/api/create-checkout', { method: 'POST' });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      showLoginError('Erreur lors de la redirection vers le paiement.');
-      btn.disabled = false;
-      btn.textContent = 'Obtenir l\'accès à vie';
-    }
-  } catch(err) {
-    showLoginError('Erreur réseau. Réessaie.');
-    btn.disabled = false;
-    btn.textContent = 'Obtenir l\'accès à vie';
-  }
-}
-
 // Auto-login si token valide
 (async function() {
   try {
