@@ -326,16 +326,16 @@ padding-bottom: calc(58px + env(safe-area-inset-bottom, 34px) + 16px);
 
 /* ── PULL TO REFRESH ── */
 .ptr-indicator {
-position: absolute;
+position: fixed;
 top: 0;
 left: 50%;
 transform: translateX(-50%) translateY(0px);
+opacity: 0;
 width: 40px; height: 40px;
 display: flex; align-items: center; justify-content: center;
 pointer-events: none;
-opacity: 1;
-z-index: 10;
-will-change: transform;
+z-index: 25;
+will-change: transform, opacity;
 }
 /* No pill/bubble — raw spinner only, like native iOS */
 .ptr-track {
@@ -2270,7 +2270,7 @@ function tick() {
 }
 tick(); setInterval(tick, 10000);
 
-// ──────────── iOS PULL TO REFRESH ────────────
+// ──────────── iOS PULL TO REFRESH — Phantom style ────────────
 (function() {
   const scroller  = document.getElementById('scroll-area');
   const indicator = document.getElementById('ptr');
@@ -2278,75 +2278,69 @@ tick(); setInterval(tick, 10000);
   const inner     = document.querySelector('.scroll-content-inner');
   if (!scroller || !indicator || !spinner || !inner) return;
 
-  const blades     = Array.from(spinner.querySelectorAll('.ispinner-blade'));
-  const n          = blades.length;
-  const TRIGGER_AT = 200; // px raw drag to complete full circle
-  const DURATION   = 1.2; // must match CSS animation-duration
+  const blades   = Array.from(spinner.querySelectorAll('.ispinner-blade'));
+  const n        = blades.length;
+  const DURATION = 1.2; // matches CSS animation-duration
+  const TRIGGER  = 38;  // rubber px needed to trigger refresh
+  const RESIST   = 0.4; // rubber band factor (lower = more resistance)
 
-  let startY = 0, pulling = false, refreshing = false, full = false;
-  let headPct = 0; // 0→1 continuous head position in blade-space
+  let startY = 0, pulling = false, refreshing = false;
+  let headPct = 0, snapTimer = null;
 
-  function resetSpinner() {
-    spinner.classList.remove('spinning');
-    indicator.style.transform = 'translateX(-50%) translateY(0px)';
-    blades.forEach(b => { b.style.opacity = '0'; b.style.animationDelay = ''; });
+  // Position spinner fixed just below sticky header
+  function positionIndicator() {
+    const st = document.getElementById('sticky-top');
+    if (st) indicator.style.top = st.offsetHeight + 'px';
+  }
+  positionIndicator();
+  window.addEventListener('resize', positionIndicator);
+
+  // Hide spinner above header initially
+  function hideIndicator() {
     indicator.style.transition = 'none';
-    headPct = 0;
-    full    = false;
+    indicator.style.transform  = 'translateX(-50%) translateY(0px)';
+    indicator.style.opacity    = '0';
   }
 
-  // Draw static gradient at fractional head position pct (0→1)
-  // pct=0: no blades. pct=1: full circle, head back at top (blade 0)
+  // Draw blades as arc filling clockwise
   function showBlades(pct) {
-    const arc  = Math.min(pct * n, n); // lit blades count (max n = all)
-    const head = ((pct * n) % n);      // head wraps: 0→7→0 (clockwise)
-
+    const arc  = Math.min(pct * n, n);
+    const head = (pct * n) % n;
     blades.forEach((b, i) => {
-      if (arc <= 0.01) { b.style.opacity = '0'; return; }
+      if (arc < 0.05) { b.style.opacity = '0'; return; }
       const behind = ((head - i + n * 4) % n);
       const inArc  = arc >= n ? true : behind < arc;
-      b.style.opacity = inArc
-        ? String(+(1 - behind / n).toFixed(3))
-        : '0';
+      b.style.opacity = inArc ? String(+(1 - behind / n).toFixed(3)) : '0';
     });
-
   }
 
-  // Kick off CSS spin animation starting exactly from headPct
-  function startReleaseSpin() {
-    // Force reflow so animation restarts cleanly even if called rapidly
+  // Start CSS spin from current blade position
+  function startSpin() {
     spinner.classList.remove('spinning');
-    blades.forEach(b => { b.style.animationDelay = ''; });
-    void spinner.offsetWidth; // trigger reflow
+    blades.forEach(b => b.style.animationDelay = '');
+    void spinner.offsetWidth;
+    const headIdx = (headPct * n) % n;
     blades.forEach((b, i) => {
       b.style.opacity = '';
-      const headIdx = (headPct * n) % n;
       const behind = ((headIdx - i + n * 4) % n) / n;
       b.style.animationDelay = `${-behind * DURATION}s`;
     });
     spinner.classList.add('spinning');
   }
 
-  function snapBack(cb) {
-    const ease = 'cubic-bezier(0.25,1,0.5,1)';
-    inner.style.transition      = `transform 0.40s ${ease}`;
-    inner.style.transform       = 'translateY(0px)';
-    indicator.style.transition  = `transform 0.40s ${ease}`;
-    indicator.style.transform   = 'translateX(-50%) translateY(0px)';
-    setTimeout(cb, 400);
-  }
-
-  let snapTimer = null;
-
   function abortAll() {
     if (snapTimer) { clearTimeout(snapTimer); snapTimer = null; }
-    pulling = false;
-    refreshing = false;
-    inner.style.transition     = 'none';
-    inner.style.transform      = 'translateY(0px)';
-    indicator.style.transition = 'none';
-    resetSpinner();
+    pulling = refreshing = false;
+    inner.style.transition = 'none';
+    inner.style.transform  = 'translateY(0px)';
+    spinner.classList.remove('spinning');
+    blades.forEach(b => { b.style.opacity = '0'; b.style.animationDelay = ''; });
+    headPct = 0;
+    hideIndicator();
   }
+
+  // Init hidden
+  hideIndicator();
 
   scroller.addEventListener('touchstart', e => {
     if (scroller.scrollTop > 2) return;
@@ -2358,46 +2352,81 @@ tick(); setInterval(tick, 10000);
   scroller.addEventListener('touchmove', e => {
     if (!pulling) return;
     const dy = e.touches[0].clientY - startY;
-    if (dy <= 0) return;
+    if (dy <= 0) { return; }
 
-    const rubber = dy * (1 / (1 + dy * 0.010));
+    // Rubber band: content moves less as you pull more
+    const rubber = dy * RESIST * (1 / (1 + dy * 0.008));
+
+    // Content slides down
     inner.style.transform = `translateY(${rubber}px)`;
-    const spinY = -40 + rubber * 0.9;
-    indicator.style.transform = `translateX(-50%) translateY(${spinY}px)`;
 
-    const rawPct = Math.min(dy / TRIGGER_AT, 1);
-    headPct = rawPct;
-    showBlades(rawPct);
-    if (!full && rawPct >= 1) full = true;
+    // Spinner follows at 0.5x speed
+    indicator.style.transform = `translateX(-50%) translateY(${rubber * 0.5}px)`;
+    indicator.style.opacity   = String(Math.min(rubber / 10, 1));
+
+    // Blades fill progressively
+    const pct = Math.min(rubber / TRIGGER, 1);
+    headPct = pct;
+    showBlades(pct);
   }, { passive: true });
 
   scroller.addEventListener('touchcancel', () => {
     if (!pulling) return;
     pulling = false;
-    snapBack(() => resetSpinner());
+    const ease = 'cubic-bezier(0.25,1,0.5,1)';
+    inner.style.transition = `transform 0.35s ${ease}`;
+    inner.style.transform  = 'translateY(0px)';
+    indicator.style.transition = `transform 0.35s ${ease}, opacity 0.2s ease`;
+    indicator.style.transform  = 'translateX(-50%) translateY(0px)';
+    indicator.style.opacity    = '0';
+    setTimeout(() => { blades.forEach(b => b.style.opacity = '0'); headPct = 0; }, 350);
   });
 
   scroller.addEventListener('touchend', e => {
     if (!pulling) return;
     pulling = false;
-    const dy = e.changedTouches[0].clientY - startY;
+    const dy     = e.changedTouches[0].clientY - startY;
+    const rubber = dy * RESIST * (1 / (1 + dy * 0.008));
+    const ease   = 'cubic-bezier(0.25,1,0.5,1)';
 
-    if (full || dy >= TRIGGER_AT) {
+    if (rubber >= TRIGGER) {
+      // TRIGGERED — content back to 0, spinner centered with equal space, then drops
       refreshing = true;
-      startReleaseSpin();
-      const ease = 'cubic-bezier(0.25,1,0.5,1)';
-      inner.style.transition     = `transform 0.55s ${ease}`;
-      inner.style.transform      = 'translateY(100px)';
-      indicator.style.transition = `transform 0.55s ${ease}`;
-      indicator.style.transform  = `translateX(-50%) translateY(20px)`;
+      startSpin();
+
+      // Push content down so equal space above/below spinner (20px each side + 40px spinner = 80px)
+      inner.style.transition     = `transform 0.45s ${ease}`;
+      inner.style.transform      = 'translateY(80px)';
+      indicator.style.transition = `transform 0.45s ${ease}, opacity 0.3s ${ease}`;
+      indicator.style.transform  = 'translateX(-50%) translateY(20px)';
+      indicator.style.opacity    = '1';
+
       snapTimer = setTimeout(() => {
-        snapTimer    = null;
-        refreshing   = false;
+        snapTimer  = null;
+        refreshing = false;
         spinner.classList.remove('spinning');
-        snapBack(() => resetSpinner());
-      }, 700);
+        // Content snaps back, spinner drops down and fades
+        inner.style.transition     = `transform 0.4s ${ease}`;
+        inner.style.transform      = 'translateY(0px)';
+        indicator.style.transition = `transform 0.4s ${ease}, opacity 0.3s ease`;
+        indicator.style.transform  = 'translateX(-50%) translateY(80px)';
+        indicator.style.opacity    = '0';
+        setTimeout(() => {
+          indicator.style.transition = 'none';
+          indicator.style.transform  = 'translateX(-50%) translateY(0px)';
+          blades.forEach(b => { b.style.opacity = '0'; b.style.animationDelay = ''; });
+          headPct = 0;
+        }, 400);
+      }, 1000);
+
     } else {
-      snapBack(() => resetSpinner());
+      // NOT triggered — snap everything back
+      inner.style.transition = `transform 0.35s ${ease}`;
+      inner.style.transform  = 'translateY(0px)';
+      indicator.style.transition = `transform 0.35s ${ease}, opacity 0.2s ease`;
+      indicator.style.transform  = 'translateX(-50%) translateY(0px)';
+      indicator.style.opacity    = '0';
+      setTimeout(() => { blades.forEach(b => b.style.opacity = '0'); headPct = 0; }, 350);
     }
   });
 
