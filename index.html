@@ -2315,7 +2315,7 @@ tick(); setInterval(tick, 10000);
   // Position spinner fixed just below sticky header
   function positionIndicator() {
     const st = document.getElementById('sticky-top');
-    if (st) indicator.style.top = st.offsetHeight + 'px';
+    if (st) indicator.style.top = (st.offsetHeight + 8) + 'px';
   }
   positionIndicator();
   window.addEventListener('resize', positionIndicator);
