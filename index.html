@@ -161,28 +161,13 @@
 
 </style>
 
-  <!-- Service Worker for offline -->
+  <!-- Service Worker — network first, toujours à jour -->
 
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        const sw = `
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => e.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(k => k !== 'ftr-v1772999712').map(k => caches.delete(k))
-    )).then(() => clients.claim())
-  ));
-          self.addEventListener('fetch', e => e.respondWith(
-            caches.open('ftr-v1772999712').then(cache =>
-              cache.match(e.request).then(r => r || fetch(e.request).then(res => {
-                cache.put(e.request, res.clone()); return res;
-              }))
-            )
-          ));
-        `;
-        const blob = new Blob([sw], {type: 'application/javascript'});
-        navigator.serviceWorker.register(URL.createObjectURL(blob));
+      // Désinscrire tous les anciens SW qui cachent
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => reg.unregister());
       });
     }
   </script>
@@ -2508,7 +2493,13 @@ function doLogin() { handleLoginSubmit({ preventDefault: () => {} }); }
 (function() {
   try {
     const saved = localStorage.getItem('ftr_session');
-    if (saved && USERS[saved]) { setTimeout(() => dismissLogin(), 0); }
+    if (saved && USERS[saved]) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => dismissLogin());
+      } else {
+        setTimeout(() => dismissLogin(), 0);
+      }
+    }
   } catch(err) {}
 })();
 
