@@ -165,11 +165,23 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      // Désinscrire tous les anciens SW qui cachent
       navigator.serviceWorker.getRegistrations().then(regs => {
         regs.forEach(reg => reg.unregister());
       });
     }
+  </script>
+
+  <!-- Cache-bust: masque le login-screen immédiatement si session connue -->
+
+  <script>
+    try {
+      const s = localStorage.getItem('ftr_session');
+      if (s) document.write('<style>#login-screen{display:none!important}</style>');
+
+```
+} catch(e) {}
+```
+
   </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2494,10 +2506,17 @@ function doLogin() { handleLoginSubmit({ preventDefault: () => {} }); }
   try {
     const saved = localStorage.getItem('ftr_session');
     if (saved && USERS[saved]) {
+      // login-screen déjà masqué par le script inline dans le <head>
+      // On le retire proprement une fois le DOM prêt
+      const remove = () => {
+        const screen = document.getElementById('login-screen');
+        if (screen) screen.remove();
+        resetWalletValues();
+      };
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => dismissLogin());
+        document.addEventListener('DOMContentLoaded', remove);
       } else {
-        setTimeout(() => dismissLogin(), 0);
+        remove();
       }
     }
   } catch(err) {}
