@@ -326,18 +326,16 @@ padding-bottom: calc(58px + env(safe-area-inset-bottom, 34px) + 16px);
 
 /* ── PULL TO REFRESH ── */
 .ptr-indicator {
-position: fixed;
+position: absolute;
 top: 0;
 left: 50%;
-transform: translateX(-50%) translateY(-60px) translateZ(0);
+transform: translateX(-50%) translateY(0px);
 width: 40px; height: 40px;
 display: flex; align-items: center; justify-content: center;
 pointer-events: none;
-visibility: hidden;
-z-index: 100;
+opacity: 1;
+z-index: 10;
 will-change: transform;
--webkit-backface-visibility: hidden;
-backface-visibility: hidden;
 }
 /* No pill/bubble — raw spinner only, like native iOS */
 .ptr-track {
@@ -2290,8 +2288,7 @@ tick(); setInterval(tick, 10000);
 
   function resetSpinner() {
     spinner.classList.remove('spinning');
-    indicator.style.visibility = 'hidden';
-    indicator.style.transform = 'translateX(-50%) translateY(-60px) translateZ(0)';
+    indicator.style.transform = 'translateX(-50%) translateY(0px)';
     blades.forEach(b => { b.style.opacity = '0'; b.style.animationDelay = ''; });
     indicator.style.transition = 'none';
     headPct = 0;
@@ -2335,7 +2332,7 @@ tick(); setInterval(tick, 10000);
     inner.style.transition      = `transform 0.40s ${ease}`;
     inner.style.transform       = 'translateY(0px)';
     indicator.style.transition  = `transform 0.40s ${ease}`;
-    indicator.style.transform   = 'translateX(-50%) translateY(-60px) translateZ(0)';
+    indicator.style.transform   = 'translateX(-50%) translateY(0px)';
     setTimeout(cb, 400);
   }
 
@@ -2364,10 +2361,9 @@ tick(); setInterval(tick, 10000);
     if (dy <= 0) return;
 
     const rubber = dy * (1 / (1 + dy * 0.010));
-    inner.style.transform = `translateY(${rubber}px) translateZ(0)`;
+    inner.style.transform = `translateY(${rubber}px)`;
     const spinY = -40 + rubber * 0.9;
-    indicator.style.visibility = 'visible';
-    indicator.style.transform = `translateX(-50%) translateY(${spinY}px) translateZ(0)`;
+    indicator.style.transform = `translateX(-50%) translateY(${spinY}px)`;
 
     const rawPct = Math.min(dy / TRIGGER_AT, 1);
     headPct = rawPct;
@@ -2412,11 +2408,8 @@ renderToks();
 (function setPad() {
   const st = document.getElementById('sticky-top');
   const si = document.getElementById('scroll-inner');
-  const ptr = document.getElementById('ptr');
-  if (st && si && ptr) {
-    const h = st.offsetHeight;
-    si.style.paddingTop = h + 'px';
-    ptr.style.top = h + 'px';
+  if (st && si) {
+    si.style.paddingTop = st.offsetHeight + 'px';
   } else setTimeout(setPad, 50);
 })();
 
