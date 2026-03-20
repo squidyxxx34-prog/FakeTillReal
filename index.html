@@ -2307,7 +2307,7 @@ tick(); setInterval(tick, 10000);
   const n        = blades.length;
   const DURATION = 1.2; // matches CSS animation-duration
   const TRIGGER  = 38;  // rubber px needed to trigger refresh
-  const RESIST   = 0.8; // rubber band factor
+  const RESIST   = 0.65;
   const MARGIN   = 20;  // px below header where spinner rests
 
   let startY = 0, pulling = false, refreshing = false;
@@ -2381,13 +2381,13 @@ tick(); setInterval(tick, 10000);
     if (dy <= 0) { return; }
 
     // Rubber band: content moves less as you pull more
-    const rubber = dy * RESIST * (1 / (1 + dy * 0.002));
+    const rubber = dy * RESIST * (1 / (1 + dy * 0.012));
 
     // Content slides down
     inner.style.transform = `translateY(${rubber}px)`;
 
-    // Spinner follows at 0.5x speed, starts at MARGIN
-    indicator.style.transform = `translateX(-50%) translateY(${MARGIN + rubber * 0.5}px)`;
+    // Spinner follows at 0.2x speed, starts at MARGIN
+    indicator.style.transform = `translateX(-50%) translateY(${MARGIN + rubber * 0.2}px)`;
     indicator.style.opacity   = String(Math.min(rubber / 10, 1));
 
     // Blades fill progressively
@@ -2412,7 +2412,7 @@ tick(); setInterval(tick, 10000);
     if (!pulling) return;
     pulling = false;
     const dy     = e.changedTouches[0].clientY - startY;
-    const rubber = dy * RESIST * (1 / (1 + dy * 0.002));
+    const rubber = dy * RESIST * (1 / (1 + dy * 0.012));
     const ease   = 'cubic-bezier(0.25,1,0.5,1)';
 
     if (rubber >= TRIGGER) {
