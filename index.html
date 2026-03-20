@@ -334,13 +334,15 @@ padding-bottom: calc(58px + env(safe-area-inset-bottom, 34px) + 16px);
 position: fixed;
 top: 0;
 left: 50%;
-transform: translateX(-50%) translateY(0px);
+transform: translateX(-50%) translateY(0px) translateZ(0);
 opacity: 0;
 width: 40px; height: 40px;
 display: flex; align-items: center; justify-content: center;
 pointer-events: none;
 z-index: 25;
 will-change: transform, opacity;
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
 }
 /* No pill/bubble — raw spinner only, like native iOS */
 .ptr-track {
@@ -409,8 +411,10 @@ animation: ispinner-release 1.2s linear infinite;
 
 /* elastic content push — controlled entirely by JS */
 .scroll-content-inner {
-transform: translateY(0px);
+transform: translateY(0px) translateZ(0);
 will-change: transform;
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
 }
 
 /* ── HEADER ── */
